@@ -5,7 +5,10 @@ export default class App extends Component {
 
   render() {
     return (
-      <p>LOLZ</p>
+      <>
+      <h1>THIS IS A HEADER!!!!</h1>
+      <p>LOLZ!! ITS WORKING MAN!</p>
+      </>
     );
   }
 }
