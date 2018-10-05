@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {Alert} from 'react-bootstrap';
 
 export default class App extends Component {
   displayName = App.name
@@ -6,8 +7,7 @@ export default class App extends Component {
   render() {
     return (
       <React.Fragment>
-      <h1>THIS IS A HEADER!!!!</h1>
-      <p>LOLZ!! ITS WORKING MAN!</p>
+      <Alert bsStyle="danger">THIS IS A HEADER!!!!</Alert>
       </React.Fragment>
     );
   }
