@@ -26,6 +26,7 @@ class SearchBar extends Component {
 				minLength={typeahead.minLength}
 				filterBy={typeahead.filterBy}
 				labelKey={typeahead.labelKey}
+				onChange={selected => console.log(selected)}
 				onSearch={query => {
 					let updatedTypeahead = { ...this.state.typeahead };
 					updatedTypeahead.isLoading = true;
