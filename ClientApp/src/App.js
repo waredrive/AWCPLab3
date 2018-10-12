@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { Route, BrowserRouter, Switch } from 'react-router-dom';
+
+import ErrorMessage from './components/ErrorMessage/ErrorMessage';
 
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
 
 export default class App extends Component {
-
 	render() {
 		return (
 			<BrowserRouter basename={baseUrl}>
-				<h1>HELLO!</h1>
+				<SearchBar />
+				<Switch>
+					<Route path="/:stationName/:stationId" component={SearchResults} />
+					<Route path="/error" component={() => {return <ErrorMessage message="An Error has occurred while fetching data from SL. Please try again."/>}} />
+					<Route component={WelcomePage} />
+				</Switch>
 			</BrowserRouter>
 		);
 	}
