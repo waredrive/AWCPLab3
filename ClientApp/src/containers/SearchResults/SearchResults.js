@@ -9,7 +9,7 @@ class SearchResults extends Component {
 		latestUpdate: null
 	};
 
-	fetchFromApi(stationId) {
+	fetchFromApi = (stationId) => {
 		const possibleTransportTypes = [
 			'Metros',
 			'Buses',
@@ -58,11 +58,6 @@ class SearchResults extends Component {
 			});
 	}
 
-	testreload = () => {
-		console.log('yey');
-		this.fetchFromApi(this.props.match.params.stationId);
-	};
-
 	componentDidMount() {
 		this.fetchFromApi(this.props.match.params.stationId);
 	}
@@ -86,7 +81,7 @@ class SearchResults extends Component {
 						{Object.keys(this.state.results).map(transportGroup => {
 							return <p key={transportGroup}>{transportGroup}</p>;
 						})}
-						<button onClick={this.testreload}>TEST ME</button>
+						<button onClick={ () => this.fetchFromApi(this.props.match.params.stationId)}>TEST ME</button>
 					</div>
 				)}
 			</React.Fragment>
