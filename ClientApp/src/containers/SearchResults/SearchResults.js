@@ -4,11 +4,9 @@ import Spinner from '../../components/Spinner/Spinner';
 
 class SearchResults extends Component {
 	state = {
-		search: {
-			isLoading: false,
-			results: {},
-			latestUpdate: null
-		}
+		isLoading: false,
+		results: {},
+		latestUpdate: null
 	};
 
 	fetchFromApi(stationId) {
@@ -20,9 +18,7 @@ class SearchResults extends Component {
 			'Ships'
 		];
 
-		let updatedSearch = { ...this.state.search };
-		updatedSearch.isLoading = true;
-		this.setState({ search: updatedSearch });
+		this.setState({ isLoading: true });
 
 		fetch('api/search/' + stationId, {
 			headers: {
@@ -48,47 +44,52 @@ class SearchResults extends Component {
 					});
 					return obj;
 				}, {});
-				let updatedSearch = { ...this.state.search };
-				updatedSearch.results = results;
-				updatedSearch.latestUpdate = response.ResponseData.LatestUpdate;
+				const latestUpdate = response.ResponseData.LatestUpdate;
 				this.setState({
-					search: updatedSearch
+					results: results,
+					isLoading: false,
+					latestUpdate: latestUpdate
 				});
+				console.log(response);
 			})
-			.catch(err => {this.props.history.push('/error'); console.log(err)});
-
-			updatedSearch = { ...this.state.search };
-			updatedSearch.isLoading = false;
-			this.setState({ search: updatedSearch });
+			.catch(err => {
+				this.props.history.push('/error');
+				console.log(err);
+			});
 	}
+
+	testreload = () => {
+		console.log('yey');
+		this.fetchFromApi(this.props.match.params.stationId);
+	};
 
 	componentDidMount() {
 		this.fetchFromApi(this.props.match.params.stationId);
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
-		return (
-			nextProps.match.params.stationId !== this.props.match.params.stationId ||
-			nextState.search.latestUpdate !== this.state.search.latestUpdate
-		);
-	}
-
-	componentDidUpdate() {
+	componentDidUpdate(prevProps) {
+		if (
+			prevProps.match.params.stationId === this.props.match.params.stationId
+		) {
+			return;
+		}
 		this.fetchFromApi(this.props.match.params.stationId);
 	}
 
 	render() {
-		console.log(this.state.search.results);
 		return (
-			<div>
-				{this.state.search.isLoading ? (
+			<React.Fragment>
+				{this.state.isLoading ? (
 					<Spinner />
 				) : (
-					Object.keys(this.state.search.results).map(transportGroup => {
-						return <p key={transportGroup}>{transportGroup}</p>;
-					})
+					<div>
+						{Object.keys(this.state.results).map(transportGroup => {
+							return <p key={transportGroup}>{transportGroup}</p>;
+						})}
+						<button onClick={this.testreload}>TEST ME</button>
+					</div>
 				)}
-			</div>
+			</React.Fragment>
 		);
 	}
 }
