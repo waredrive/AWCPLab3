@@ -37,13 +37,11 @@ class SearchBar extends Component {
 		})
 			.then(response => {
 				if (!response.ok) {
-                    console.log(response)
 					throw Error(response);
 				}
 				return response.json();
 			})
 			.then(response => {
-				console.log(response);
 				let updatedTypeahead = { ...this.state.typeaheadSettings };
 				let filteredResponse = response.ResponseData.filter(
 					val =>
@@ -64,7 +62,6 @@ class SearchBar extends Component {
 
 	render() {
 		return (
-			//TODO: Error Handling
 			<AsyncTypeahead
 				{...this.state.typeaheadSettings}
 				onChange={selected => this.searchSelectedStation(selected)}

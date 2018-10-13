@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 
+import Spinner from '../../components/Spinner/Spinner';
+
 class SearchResults extends Component {
 	state = {
 		search: {
 			isLoading: false,
-			isCompleted: false,
-			results: {}
+			results: {},
+			LatestUpdate: null
 		}
 	};
 
@@ -19,7 +21,7 @@ class SearchResults extends Component {
 		];
 
 		let updatedSearch = { ...this.state.search };
-		updatedSearch.isLoading = false;
+		updatedSearch.isLoading = true;
 		this.setState({ search: updatedSearch });
 		fetch('api/search/' + stationId, {
 			headers: {
@@ -43,9 +45,9 @@ class SearchResults extends Component {
 					return obj;
 				}, {});
 				let updatedSearch = { ...this.state.search };
-				updatedSearch.isLoading = false;
-				updatedSearch.isCompleted = true;
 				updatedSearch.results = results;
+				updatedSearch.LatestUpdate = response.LatestUpdate;
+				updatedSearch.isLoading = false;
 				this.setState({
 					search: updatedSearch
 				});
@@ -58,9 +60,9 @@ class SearchResults extends Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
-		console.log(nextState.search.results !== this.state.search.results);
 		return (
-			nextProps.match.params.stationId !== this.props.match.params.stationId
+			nextProps.match.params.stationId !== this.props.match.params.stationId ||
+			nextState.search.LatestUpdate !== this.state.search.LatestUpdate
 		);
 	}
 
@@ -69,16 +71,19 @@ class SearchResults extends Component {
 	}
 
 	render() {
-		if (this.state.isCompleted) {
-			// console.log(this.state.search.results)
-			// console.log(Object.keys(this.state.search.results))
-		}
 		return (
-			<p>Hi</p>
-			// Object.keys(this.state.search.results).forEach(transportGroup => {
-			//     <p>{this.state.search.results[transportGroup]}</p>
-
-			// })
+			Object.keys(this.state.search.results).map(transportGroup => {
+				return <p key={transportGroup}>{transportGroup}</p>;
+			})
+			// <div>
+			// 	{this.state.search.isLoading ? (
+			// 		<Spinner />
+			// 	) : (
+			// 		Object.keys(this.state.search.results).map(transportGroup => {
+			// 			return <p key={transportGroup}>{transportGroup}</p>;
+			// 		})
+			// 	)}
+			// </div>
 		);
 	}
 }
