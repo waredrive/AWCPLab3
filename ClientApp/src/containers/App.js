@@ -12,12 +12,21 @@ export default class App extends Component {
 	render() {
 		return (
 			<BrowserRouter basename={baseUrl}>
-				<SearchBar />
-				<Switch>
-					<Route path="/:stationName/:stationId" component={SearchResults} />
-					<Route path="/error" component={() => {return <ErrorMessage message="An Error has occurred while fetching data from SL. Please try again."/>}} />
-					<Route component={WelcomePage} />
-				</Switch>
+				<React.Fragment>
+					<SearchBar />
+					<Switch>
+						<Route path="/:stationName/:stationId" component={SearchResults} />
+						<Route
+							path="/error"
+							component={() => {
+								return (
+									<ErrorMessage message="An Error has occurred while fetching data from SL. Please try again." />
+								);
+							}}
+						/>
+						<Route component={WelcomePage} />
+					</Switch>
+				</React.Fragment>
 			</BrowserRouter>
 		);
 	}

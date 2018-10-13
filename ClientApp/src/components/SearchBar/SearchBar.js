@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
-import { withRouter } from "react-router-dom";
+import { withRouter } from 'react-router-dom';
 
 class SearchBar extends Component {
 	state = {
@@ -18,8 +18,11 @@ class SearchBar extends Component {
 		if (station.length !== 1) {
 			return;
 		}
-		console.log('/',encodeURIComponent(station[0].Name.replace(/\//g, '_')), '/', station[0].SiteId)
-		this.props.history.push(`/${encodeURIComponent(station[0].Name.replace(/\//g, '_'))}/${station[0].SiteId}`);
+		this.props.history.push(
+			`/${encodeURIComponent(station[0].Name.replace(/\//g, '_'))}/${
+				station[0].SiteId
+			}`
+		);
 	};
 
 	fetchFromApi = query => {
@@ -32,20 +35,29 @@ class SearchBar extends Component {
 				'Content-Type': 'application/json'
 			}
 		})
-			.then(resp => resp.json())
+			.then(resp => {
+				if (!resp.ok) {
+                    console.log(resp)
+					throw Error(resp);
+				}
+				return resp.json();
+			})
 			.then(response => {
+				console.log(response);
 				let updatedTypeahead = { ...this.state.typeaheadSettings };
-				let filteredResponse = response.ResponseData.filter(val =>
-					val.Name.toLowerCase()
-						.trim()
-						.includes(query.toLowerCase().trim())
+				let filteredResponse = response.ResponseData.filter(
+					val =>
+						val.Name.toLowerCase()
+							.trim()
+							.includes(query.toLowerCase().trim()) ||
+						val.SiteId.trim().includes(query.trim())
 				);
 				updatedTypeahead.isLoading = false;
 				updatedTypeahead.options = filteredResponse;
 				this.setState({
 					typeaheadSettings: updatedTypeahead
 				});
-			});
+			}).catch(err => console.log(err));
 	};
 
 	fetchFromSessionStorage = query => {};
