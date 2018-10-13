@@ -35,12 +35,12 @@ class SearchBar extends Component {
 				'Content-Type': 'application/json'
 			}
 		})
-			.then(resp => {
-				if (!resp.ok) {
-                    console.log(resp)
-					throw Error(resp);
+			.then(response => {
+				if (!response.ok) {
+                    console.log(response)
+					throw Error(response);
 				}
-				return resp.json();
+				return response.json();
 			})
 			.then(response => {
 				console.log(response);
