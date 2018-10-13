@@ -3,9 +3,10 @@ import React from 'react';
 import DepartureItem from '../DepartureItem/DepartureItem';
 
 const departureGroup = props => {
+    console.log(props.departures);
 	return (
 		<React.Fragment>
-			<h4>This is a departure group!</h4>
+			<h4>This is a departure group for {props.transportType}!</h4>
 			<ul>
 				{props.departures.map((departure, index) => {
 					return (

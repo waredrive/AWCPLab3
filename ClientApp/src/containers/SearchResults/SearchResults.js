@@ -7,7 +7,8 @@ class SearchResults extends Component {
 	state = {
 		isLoading: false,
 		results: {},
-		latestUpdate: null
+		latestUpdate: null,
+		// transportTypes: []
 	};
 
 	fetchFromApi = stationId => {
@@ -37,20 +38,24 @@ class SearchResults extends Component {
 				if (response.StatusCode !== 0 || !response.ResponseData) {
 					throw Error(response);
 				}
+				// let transportTypes = [];
 				let results = Object.keys(response.ResponseData).reduce((obj, k) => {
 					possibleTransportTypes.forEach(element => {
 						if (k === element && response.ResponseData[k].length > 0) {
 							obj[k] = response.ResponseData[k];
+							// transportTypes.push(k);
 						}
 					});
 					return obj;
 				}, {});
 				const latestUpdate = response.ResponseData.LatestUpdate;
 				this.setState({
+					// transportTypes: transportTypes,
 					results: results,
 					isLoading: false,
 					latestUpdate: latestUpdate
 				});
+				console.log(this.state)
 				// console.log(response);
 			})
 			.catch(err => {
@@ -87,11 +92,17 @@ class SearchResults extends Component {
 						>
 							UPDATE
 						</button>
+						{/* <div>
+						{Object.keys(this.state.results).map(transportType => {
+							return <button key={transportType}>{transportType}</button>
+						})}
+						</div> */}
 						<button onClick={() => this.props.history.push('/')}>CLEAR</button>
 						{Object.keys(this.state.results).map(transportGroup => {
 							return (
 								<DepartureGroup
 									key={transportGroup}
+									transportType={transportGroup}
 									departures={this.state.results[transportGroup]}
 								/>
 							);
