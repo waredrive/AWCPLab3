@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import Spinner from '../../components/Spinner/Spinner';
+import DepartureGroup from './DepartureGroup/DepartureGroup';
 
 class SearchResults extends Component {
 	state = {
@@ -9,7 +10,7 @@ class SearchResults extends Component {
 		latestUpdate: null
 	};
 
-	fetchFromApi = (stationId) => {
+	fetchFromApi = stationId => {
 		const possibleTransportTypes = [
 			'Metros',
 			'Buses',
@@ -33,7 +34,7 @@ class SearchResults extends Component {
 				return response.json();
 			})
 			.then(response => {
-				if (response.StatusCode !== 0 && !response.ResponseData) {
+				if (response.StatusCode !== 0 || !response.ResponseData) {
 					throw Error(response);
 				}
 				let results = Object.keys(response.ResponseData).reduce((obj, k) => {
@@ -50,13 +51,13 @@ class SearchResults extends Component {
 					isLoading: false,
 					latestUpdate: latestUpdate
 				});
-				console.log(response);
+				// console.log(response);
 			})
 			.catch(err => {
 				this.props.history.push('/error');
 				console.log(err);
 			});
-	}
+	};
 
 	componentDidMount() {
 		this.fetchFromApi(this.props.match.params.stationId);
@@ -78,10 +79,23 @@ class SearchResults extends Component {
 					<Spinner />
 				) : (
 					<div>
+						<h2>{this.props.match.params.stationName.replace(/_/g, ' / ')}</h2>
+						<button
+							onClick={() =>
+								this.fetchFromApi(this.props.match.params.stationId)
+							}
+						>
+							UPDATE
+						</button>
+						<button onClick={() => this.props.history.push('/')}>CLEAR</button>
 						{Object.keys(this.state.results).map(transportGroup => {
-							return <p key={transportGroup}>{transportGroup}</p>;
+							return (
+								<DepartureGroup
+									key={transportGroup}
+									departures={this.state.results[transportGroup]}
+								/>
+							);
 						})}
-						<button onClick={ () => this.fetchFromApi(this.props.match.params.stationId)}>TEST ME</button>
 					</div>
 				)}
 			</React.Fragment>

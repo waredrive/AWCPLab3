@@ -1,10 +1,20 @@
-import React, {Component} from 'react';
+import React from 'react';
 
-class DepartureGroup extends Component {
+import DepartureItem from '../DepartureItem/DepartureItem';
 
-    render() {
-        return <p>This is DepartureGroup!</p>;
-    }
-}
+const departureGroup = props => {
+	return (
+		<React.Fragment>
+			<h4>This is a departure group!</h4>
+			<ul>
+				{props.departures.map((departure, index) => {
+					return (
+							<DepartureItem key={index} departure={departure} />
+					);
+				})}
+			</ul>
+		</React.Fragment>
+	);
+};
 
-export default DepartureGroup
+export default departureGroup;
