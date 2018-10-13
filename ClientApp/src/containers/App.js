@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Route, BrowserRouter, Switch } from 'react-router-dom';
 
 import ErrorMessage from '../components/ErrorMessage/ErrorMessage';
+import SearchBar from '../components/SearchBar/SearchBar';
+import WelcomePage from '../components/WelcomePage/WelcomePage';
 import SearchResults from './SearchResults/SearchResults';
 
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
