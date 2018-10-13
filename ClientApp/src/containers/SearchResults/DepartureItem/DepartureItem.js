@@ -72,7 +72,7 @@ class DepartureItem extends Component {
 
 
     render() {
-        // console.log(this.state.intermediateStops)
+        console.log(this.state.intermediateStops)
         return <p onClick={() => this.fetchFromApi(this.props.match.params.stationId, this.props.departure)}>{this.props.departure.Destination}</p>;
     }
 }
