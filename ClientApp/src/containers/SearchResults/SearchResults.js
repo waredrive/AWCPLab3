@@ -7,7 +7,7 @@ class SearchResults extends Component {
 		search: {
 			isLoading: false,
 			results: {},
-			LatestUpdate: null
+			latestUpdate: null
 		}
 	};
 
@@ -23,6 +23,7 @@ class SearchResults extends Component {
 		let updatedSearch = { ...this.state.search };
 		updatedSearch.isLoading = true;
 		this.setState({ search: updatedSearch });
+
 		fetch('api/search/' + stationId, {
 			headers: {
 				Accept: 'application/json',
@@ -30,12 +31,15 @@ class SearchResults extends Component {
 			}
 		})
 			.then(response => {
-				if (!response.ok && !response.ResponseData) {
+				if (!response.ok) {
 					throw Error(response);
 				}
 				return response.json();
 			})
 			.then(response => {
+				if (response.StatusCode !== 0 && !response.ResponseData) {
+					throw Error(response);
+				}
 				let results = Object.keys(response.ResponseData).reduce((obj, k) => {
 					possibleTransportTypes.forEach(element => {
 						if (k === element && response.ResponseData[k].length > 0) {
@@ -46,13 +50,16 @@ class SearchResults extends Component {
 				}, {});
 				let updatedSearch = { ...this.state.search };
 				updatedSearch.results = results;
-				updatedSearch.LatestUpdate = response.LatestUpdate;
-				updatedSearch.isLoading = false;
+				updatedSearch.latestUpdate = response.ResponseData.LatestUpdate;
 				this.setState({
 					search: updatedSearch
 				});
 			})
-			.catch(err => console.log(err));
+			.catch(err => {this.props.history.push('/error'); console.log(err)});
+
+			updatedSearch = { ...this.state.search };
+			updatedSearch.isLoading = false;
+			this.setState({ search: updatedSearch });
 	}
 
 	componentDidMount() {
@@ -62,7 +69,7 @@ class SearchResults extends Component {
 	shouldComponentUpdate(nextProps, nextState) {
 		return (
 			nextProps.match.params.stationId !== this.props.match.params.stationId ||
-			nextState.search.LatestUpdate !== this.state.search.LatestUpdate
+			nextState.search.latestUpdate !== this.state.search.latestUpdate
 		);
 	}
 
@@ -71,19 +78,17 @@ class SearchResults extends Component {
 	}
 
 	render() {
+		console.log(this.state.search.results);
 		return (
-			Object.keys(this.state.search.results).map(transportGroup => {
-				return <p key={transportGroup}>{transportGroup}</p>;
-			})
-			// <div>
-			// 	{this.state.search.isLoading ? (
-			// 		<Spinner />
-			// 	) : (
-			// 		Object.keys(this.state.search.results).map(transportGroup => {
-			// 			return <p key={transportGroup}>{transportGroup}</p>;
-			// 		})
-			// 	)}
-			// </div>
+			<div>
+				{this.state.search.isLoading ? (
+					<Spinner />
+				) : (
+					Object.keys(this.state.search.results).map(transportGroup => {
+						return <p key={transportGroup}>{transportGroup}</p>;
+					})
+				)}
+			</div>
 		);
 	}
 }
