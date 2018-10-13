@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap-theme.css';
 import './index.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import App from './containers/App';
 import registerServiceWorker from './registerServiceWorker';
 
 const rootElement = document.getElementById('root');
