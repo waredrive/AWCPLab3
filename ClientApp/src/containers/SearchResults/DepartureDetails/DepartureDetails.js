@@ -24,8 +24,15 @@ const departureDetails = props => (
 			</ListGroupItem>
 		))}
 		<ListGroupItem
-            href=""
-			onClick={ e => {e.preventDefault(); this.onDepartureClickHandler()}}
+			href=""
+			onClick={e => {
+				e.preventDefault();
+				props.history.push(
+					`/${encodeURIComponent(
+						props.intermediateStops.EndStation.Name.replace(/\//g, '_')
+					)}/${props.intermediateStops.EndStation.SiteId}`
+				);
+			}}
 			key={props.intermediateStops.EndStation.SiteId}
 		>
 			{props.intermediateStops.EndStation.Name}

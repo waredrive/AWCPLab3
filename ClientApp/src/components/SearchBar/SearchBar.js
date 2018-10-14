@@ -36,8 +36,8 @@ class SearchBar extends Component {
 			}`
 			
 		);
-		this._typeahead.getInstance().clear()
-		this._typeahead.getInstance().blur()
+		this.typeahead.getInstance().clear()
+		this.typeahead.getInstance().blur()
 	};
 
 	fetchFromApi = query => {
@@ -85,10 +85,10 @@ class SearchBar extends Component {
 				{...this.state.typeaheadSettings}
 				onChange={selected => this.searchSelectedStation(selected)}
 				onSearch={query => this.fetchFromApi(query)}
-				ref={(ref) => this._typeahead = ref}
+				ref={(ref) => this.typeahead = ref}
 			/>
 				<InputGroup.Button>
-				  <Button bsSize='large' onClick={() => this._typeahead.getInstance().clear()}>
+				  <Button bsSize='large' onClick={() => this.typeahead.getInstance().clear()}>
 					Clear
 				  </Button>
 				</InputGroup.Button>
