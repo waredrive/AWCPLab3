@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Button } from 'react-bootstrap';
 
 import Spinner from '../../components/Spinner/Spinner';
 import DepartureGroup from './DepartureGroup/DepartureGroup';
@@ -80,17 +81,17 @@ class SearchResults extends Component {
 				) : (
 					<div>
 						<h2>{this.props.match.params.stationName.replace(/_/g, ' / ')}</h2>
-						<button
+						<Button bsStyle='primary' bsSize='large'
 							onClick={() =>
 								this.fetchFromApi(this.props.match.params.stationId)
 							}
 						>
 							UPDATE
-						</button>
-						<button onClick={() => this.props.history.push('/')}>CLEAR</button>
+						</Button>
+						<Button bsStyle='danger' bsSize='large' onClick={() => this.props.history.push('/')}>CLEAR</Button>
 						<div>
 						{['All', ...Object.keys(this.state.results)].map(transportType => {
-							return <button key={transportType}>{transportType}</button>
+							return <Button key={transportType}>{transportType}</Button>
 						})}
 						</div>
 						{Object.keys(this.state.results).map(transportGroup => {

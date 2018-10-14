@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import { withRouter } from 'react-router-dom';
+import { FormGroup, InputGroup, Button } from 'react-bootstrap';
 
 class SearchBar extends Component {
 	state = {
@@ -33,7 +34,10 @@ class SearchBar extends Component {
 			`/${encodeURIComponent(station[0].Name.replace(/\//g, '_'))}/${
 				station[0].SiteId
 			}`
+			
 		);
+		this._typeahead.getInstance().clear()
+		this._typeahead.getInstance().blur()
 	};
 
 	fetchFromApi = query => {
@@ -75,30 +79,21 @@ class SearchBar extends Component {
 
 	render() {
 		return (
-			<Fragment>
-			<FormGroup validationState={validationState}>
+			<FormGroup style={{width: '80%', margin: '10px auto'}}>
 			  <InputGroup>
-				<InputGroup.Addon className="input-group-prepend">
-				  <span className="input-group-text">
-					The capital of {state.name} is
-				  </span>
-				</InputGroup.Addon>
 				<AsyncTypeahead
 				{...this.state.typeaheadSettings}
 				onChange={selected => this.searchSelectedStation(selected)}
 				onSearch={query => this.fetchFromApi(query)}
+				ref={(ref) => this._typeahead = ref}
 			/>
-				<InputGroup.Button className="input-group-append">
-				  <Button
-					className="btn-outline-secondary"
-					onClick={() => this.setState(getInitialState())}>
-					Play Again
+				<InputGroup.Button>
+				  <Button bsSize='large' onClick={() => this._typeahead.getInstance().clear()}>
+					Clear
 				  </Button>
 				</InputGroup.Button>
 			  </InputGroup>
 			</FormGroup>
-		  </Fragment>
-
 		);
 	}
 }
