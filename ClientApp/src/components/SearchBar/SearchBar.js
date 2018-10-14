@@ -5,45 +5,53 @@ import { FormGroup, InputGroup, Button } from 'react-bootstrap';
 
 class SearchBar extends Component {
 	state = {
-		typeaheadSettings: {
-			selectHintOnEnter: true,
-			highlightOnlyResult: true,
-			isLoading: false,
-			bsSize: 'large',
-			options: [],
-			minLength: 3,
-			filterBy: option => option.Name,
-			labelKey: 'Name'
-		},
-		sessionStorage: []
+		searchResults: [],
+		searchHistoryStorage: [],
+		isLoading: false,
+		touched: false
 	};
 
 	getSearchHistory() {
-        if (sessionStorage) {
-            if (sessionStorage.getItem('searchHistory')) {
-                return JSON.parse(sessionStorage.getItem('searchHistory'));
-            }
-        }
+		let storage = [];
+		if (sessionStorage) {
+			if (sessionStorage.getItem('searchHistory')) {
+				storage = JSON.parse(sessionStorage.getItem('searchHistory'));
+			}
+		}
+		return storage;
 	}
-	
+
+	addToSearchHistory = station => {
+		let storage = [...this.state.searchHistoryStorage];
+
+		if (sessionStorage) {
+			if (!storage.some(s => s.Name === station.Name)) {
+				storage.unshift(station);
+			}
+			if (storage.length > 5) {
+				storage.pop();
+			}
+			this.setState({ searchHistoryStorage: storage });
+			sessionStorage.setItem('searchHistory', JSON.stringify(storage));
+		}
+	};
+
 	searchSelectedStation = station => {
 		if (station.length !== 1) {
 			return;
 		}
+		this.addToSearchHistory(station[0]);
 		this.props.history.push(
 			`/${encodeURIComponent(station[0].Name.replace(/\//g, '_'))}/${
 				station[0].SiteId
 			}`
-			
 		);
-		this.typeahead.getInstance().clear()
-		this.typeahead.getInstance().blur()
+		this.typeahead.getInstance().clear();
+		this.typeahead.getInstance().blur();
 	};
 
 	fetchFromApi = query => {
-		let updatedTypeahead = { ...this.state.typeaheadSettings };
-		updatedTypeahead.isLoading = true;
-		this.setState({ typeaheadSettings: updatedTypeahead });
+		this.setState({ loading: true });
 		fetch('api/typeahead/' + query, {
 			headers: {
 				Accept: 'application/json',
@@ -57,7 +65,6 @@ class SearchBar extends Component {
 				return response.json();
 			})
 			.then(response => {
-				let updatedTypeahead = { ...this.state.typeaheadSettings };
 				let filteredResponse = response.ResponseData.filter(
 					val =>
 						val.Name.toLowerCase()
@@ -65,34 +72,65 @@ class SearchBar extends Component {
 							.includes(query.toLowerCase().trim()) ||
 						val.SiteId.trim().includes(query.trim())
 				);
-				updatedTypeahead.isLoading = false;
-				updatedTypeahead.options = filteredResponse;
 				this.setState({
-					typeaheadSettings: updatedTypeahead
+					isLoading: false,
+					searchResults: filteredResponse
 				});
-			}).catch(err => console.log(err));
+			})
+			.catch(err => console.log(err));
 	};
 
-	fetchFromSessionStorage = query => {};
+	fetchFromSessionStorage = () => {
+		const searchHistory = [...this.state.searchHistoryStorage];
+		this.setState({ searchResults: searchHistory });
+	};
 
-	
+	onFocusHandler = () => {
+		if (this.state.touched || !this.typeahead.state.query.length === 0) {
+			return;
+		}
+		this.setState({ touched: true });
+		this.fetchFromSessionStorage();
+	};
+
+	componentDidMount() {
+		const history = this.getSearchHistory();
+		this.setState({ searchHistoryStorage: history });
+	}
 
 	render() {
 		return (
-			<FormGroup style={{width: '80%', margin: '10px auto'}}>
-			  <InputGroup>
-				<AsyncTypeahead
-				{...this.state.typeaheadSettings}
-				onChange={selected => this.searchSelectedStation(selected)}
-				onSearch={query => this.fetchFromApi(query)}
-				ref={(ref) => this.typeahead = ref}
-			/>
-				<InputGroup.Button>
-				  <Button bsSize='large' onClick={() => this.typeahead.getInstance().clear()}>
-					Clear
-				  </Button>
-				</InputGroup.Button>
-			  </InputGroup>
+			<FormGroup style={{ width: '80%', margin: '10px auto' }}>
+				<InputGroup>
+					<AsyncTypeahead
+						isLoading={this.state.isLoading}
+						selectHintOnEnter={true}
+						highlightOnlyResult={true}
+						bsSize="large"
+						minLength={0}
+						placeholder="Station..."
+						filterBy={option => option.Name}
+						labelKey="Name"
+						useCache={false}
+						options={this.state.searchResults}
+						onFocus={this.onFocusHandler}
+						onChange={selected => this.searchSelectedStation(selected)}
+						onSearch={query => {
+							query.trim().length > 2
+								? this.fetchFromApi(query)
+								: this.fetchFromSessionStorage();
+						}}
+						ref={ref => (this.typeahead = ref)}
+					/>
+					<InputGroup.Button>
+						<Button
+							bsSize="large"
+							onClick={() => {this.typeahead.getInstance().clear(); this.setState({touched: false})}}
+						>
+							Clear
+						</Button>
+					</InputGroup.Button>
+				</InputGroup>
 			</FormGroup>
 		);
 	}
