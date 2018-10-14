@@ -9,6 +9,7 @@ class SearchResults extends Component {
 		isLoading: false,
 		results: {},
 		latestUpdate: null,
+		hide: {Metros: false, Buses: false, Trains: false, Trams: false, Ships: false}
 	};
 
 	fetchFromApi = stationId => {
@@ -71,6 +72,19 @@ class SearchResults extends Component {
 			return;
 		}
 		this.fetchFromApi(this.props.match.params.stationId);
+		this.hideTransportGroup('All');
+	}
+
+	hideTransportGroup = (transportType) => {
+		let hidden;
+
+		if(transportType === 'All'){
+			hidden = Object.keys(this.state.hide).map(k => k = false)
+		} else{
+			hidden = {...this.state.hide}
+			hidden[transportType] = !hidden[transportType];
+		}
+		this.setState({hide: hidden})
 	}
 
 	render() {
@@ -91,16 +105,17 @@ class SearchResults extends Component {
 						<Button bsStyle='danger' bsSize='large' onClick={() => this.props.history.push('/')}>CLEAR</Button>
 						<div>
 						{['All', ...Object.keys(this.state.results)].map(transportType => {
-							return <Button key={transportType}>{transportType}</Button>
+							return <Button onClick={() =>{this.hideTransportGroup(transportType)}} key={transportType}>{transportType}</Button>
 						})}
 						</div>
 						{Object.keys(this.state.results).map(transportGroup => {
 							return (
+								!this.state.hide[transportGroup] ?
 								<DepartureGroup
 									key={transportGroup}
 									transportType={transportGroup}
 									departures={this.state.results[transportGroup]}
-								/>
+								/> : null
 							);
 						})}
 					</div>

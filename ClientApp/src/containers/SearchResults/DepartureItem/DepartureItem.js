@@ -54,7 +54,7 @@ class DepartureItem extends Component {
 			.then(response => {
 				// console.log('1', response);
 				if (response.status !== 'success' || !response.data) {
-					console.log('2', response);
+					// console.log('2', response);
 					throw Error(response);
 				}
 
