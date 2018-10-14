@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { ListGroup, ListGroupItem } from 'react-bootstrap';
 
 import DepartureDetails from '../DepartureDetails/DepartureDetails';
 import Spinner from '../../../components/Spinner/Spinner';
@@ -91,21 +92,29 @@ class DepartureItem extends Component {
 
 	render() {
 		return (
-			<React.Fragment>
-				<p onClick={this.onDepartureClickHandler}>
+			<ListGroup>
+				<ListGroupItem
+					href=""
+					onClick={e => {
+						e.preventDefault();
+						this.onDepartureClickHandler();
+					}}
+				>
 					{this.props.departure.Destination}
-				</p>
+				</ListGroupItem>
 				{this.state.showDetails ? (
 					this.state.isLoading ||
 					Object.keys(this.state.intermediateStops).length !== 3 ? (
 						<Spinner />
 					) : (
-						<DepartureDetails
-							intermediateStops={this.state.intermediateStops}
-						/>
+						<ListGroupItem>
+							<DepartureDetails
+								intermediateStops={this.state.intermediateStops}
+							/>
+						</ListGroupItem>
 					)
 				) : null}
-			</React.Fragment>
+			</ListGroup>
 		);
 	}
 }

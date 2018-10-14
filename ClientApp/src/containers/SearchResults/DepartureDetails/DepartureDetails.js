@@ -1,13 +1,36 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
+import { ListGroup, ListGroupItem } from 'react-bootstrap';
 
 const departureDetails = props => (
-	<div style={{border: '1px solid black'}}>
-		<p>{props.intermediateStops.StartStation.Name}</p>
-		{props.intermediateStops.MiddleStations.map(stop => (
-            <p>{stop.Name}</p>
+	<ListGroup>
+		<ListGroupItem key={props.intermediateStops.StartStation.SiteId}>
+			{props.intermediateStops.StartStation.Name}
+		</ListGroupItem>
+		{props.intermediateStops.MiddleStations.map((stop, index) => (
+			<ListGroupItem
+				key={stop.SiteId + index}
+				href=""
+				onClick={e => {
+					e.preventDefault();
+					props.history.push(
+						`/${encodeURIComponent(stop.Name.replace(/\//g, '_'))}/${
+							stop.SiteId
+						}`
+					);
+				}}
+			>
+				{stop.Name}
+			</ListGroupItem>
 		))}
-		<p>{props.intermediateStops.EndStation.Name}</p>
-	</div>
+		<ListGroupItem
+            href=""
+			onClick={ e => {e.preventDefault(); this.onDepartureClickHandler()}}
+			key={props.intermediateStops.EndStation.SiteId}
+		>
+			{props.intermediateStops.EndStation.Name}
+		</ListGroupItem>
+	</ListGroup>
 );
 
-export default departureDetails;
+export default withRouter(departureDetails);
