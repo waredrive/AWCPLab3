@@ -6,14 +6,25 @@ class SearchBar extends Component {
 	state = {
 		typeaheadSettings: {
 			selectHintOnEnter: true,
+			highlightOnlyResult: true,
 			isLoading: false,
+			bsSize: 'large',
 			options: [],
 			minLength: 3,
 			filterBy: option => option.Name,
 			labelKey: 'Name'
-		}
+		},
+		sessionStorage: []
 	};
 
+	getSearchHistory() {
+        if (sessionStorage) {
+            if (sessionStorage.getItem('searchHistory')) {
+                return JSON.parse(sessionStorage.getItem('searchHistory'));
+            }
+        }
+	}
+	
 	searchSelectedStation = station => {
 		if (station.length !== 1) {
 			return;
@@ -60,13 +71,34 @@ class SearchBar extends Component {
 
 	fetchFromSessionStorage = query => {};
 
+	
+
 	render() {
 		return (
-			<AsyncTypeahead
+			<Fragment>
+			<FormGroup validationState={validationState}>
+			  <InputGroup>
+				<InputGroup.Addon className="input-group-prepend">
+				  <span className="input-group-text">
+					The capital of {state.name} is
+				  </span>
+				</InputGroup.Addon>
+				<AsyncTypeahead
 				{...this.state.typeaheadSettings}
 				onChange={selected => this.searchSelectedStation(selected)}
 				onSearch={query => this.fetchFromApi(query)}
 			/>
+				<InputGroup.Button className="input-group-append">
+				  <Button
+					className="btn-outline-secondary"
+					onClick={() => this.setState(getInitialState())}>
+					Play Again
+				  </Button>
+				</InputGroup.Button>
+			  </InputGroup>
+			</FormGroup>
+		  </Fragment>
+
 		);
 	}
 }
