@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
 import DepartureDetails from '../DepartureDetails/DepartureDetails';
+import Spinner from '../../../components/Spinner/Spinner';
 
 class DepartureItem extends Component {
 	state = {
 		intermediateStops: {},
 		isLoading: false,
-		hideDetails: true
+		showDetails: false
 	};
 
 	formatTime = i => {
@@ -38,62 +39,73 @@ class DepartureItem extends Component {
 			)}`;
 
 		this.setState({ isLoading: true });
-		if (Object.keys(this.state.intermediateStops).length === 3) {
-			return;
-		} else {
-			fetch('api/stops/' + params, {
-				headers: {
-					Accept: 'application/json',
-					'Content-Type': 'application/json'
+		fetch('api/stops/' + params, {
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			}
+		})
+			.then(response => {
+				if (!response.ok) {
+					throw Error(response);
 				}
+				return response.json();
 			})
-				.then(response => {
-					if (!response.ok) {
-						throw Error(response);
-					}
-					return response.json();
-				})
-				.then(response => {
-					console.log('1', response);
-					if (response.status !== 'success' || !response.data) {
-						console.log('2', response);
-						throw Error(response);
-					}
+			.then(response => {
+				// console.log('1', response);
+				if (response.status !== 'success' || !response.data) {
+					console.log('2', response);
+					throw Error(response);
+				}
 
-					let results = Object.keys(response['data']).reduce((obj, k) => {
-						stationCategories.forEach(element => {
-							if (k === element) {
-								obj[k] = response['data'][k];
-							}
-						});
-						return obj;
-					}, {});
-
-					this.setState({
-						intermediateStops: results,
-						isLoading: false
+				let results = Object.keys(response['data']).reduce((obj, k) => {
+					stationCategories.forEach(element => {
+						if (k === element) {
+							obj[k] = response['data'][k];
+						}
 					});
-					console.log('3', response);
-				})
-				.catch(err => {
-					console.log('4', err);
+					return obj;
+				}, {});
+
+				this.setState({
+					intermediateStops: results,
+					isLoading: false
 				});
+				// console.log('3', response);
+			})
+			.catch(err => {
+				// console.log('4', err);
+			});
+	};
+
+	onDepartureClickHandler = () => {
+		if (Object.keys(this.state.intermediateStops).length !== 3) {
+			this.fetchFromApi(
+				this.props.match.params.stationId,
+				this.props.departure
+			);
 		}
+		const showDetails = !this.state.showDetails;
+		this.setState({ showDetails: showDetails });
 	};
 
 	render() {
-		console.log(this.state.intermediateStops);
 		return (
-			<p
-				onClick={() =>
-					this.fetchFromApi(
-						this.props.match.params.stationId,
-						this.props.departure
+			<React.Fragment>
+				<p onClick={this.onDepartureClickHandler}>
+					{this.props.departure.Destination}
+				</p>
+				{this.state.showDetails ? (
+					this.state.isLoading ||
+					Object.keys(this.state.intermediateStops).length !== 3 ? (
+						<Spinner />
+					) : (
+						<DepartureDetails
+							intermediateStops={this.state.intermediateStops}
+						/>
 					)
-				}
-			>
-				{this.props.departure.Destination}
-			</p>
+				) : null}
+			</React.Fragment>
 		);
 	}
 }
