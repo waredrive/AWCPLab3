@@ -36,6 +36,10 @@ class SearchBar extends Component {
 		}
 	};
 
+	clearSearch = () => {
+		this.typeahead.getInstance().clear();
+		this.setState({ touched: false })
+	}
 	searchSelectedStation = station => {
 		if (station.length !== 1) {
 			return;
@@ -46,8 +50,8 @@ class SearchBar extends Component {
 				station[0].SiteId
 			}`
 		);
-		this.typeahead.getInstance().clear();
-		this.typeahead.getInstance().blur();
+			this.clearSearch();
+			this.typeahead.getInstance().blur();
 	};
 
 	fetchFromApi = query => {
@@ -125,7 +129,7 @@ class SearchBar extends Component {
 					<InputGroup.Button>
 						<Button
 							bsSize="large"
-							onClick={() => {this.typeahead.getInstance().clear(); this.setState({touched: false})}}
+							onClick={this.clearSearch}
 						>
 							Clear
 						</Button>
