@@ -84,10 +84,10 @@ class SearchResults extends Component {
 	showAllTransportGroups = () => {
 		let hidden = Object.keys(this.state.hide).map(k => (k = false));
 		this.setState({ hide: hidden });
-	}
+	};
 
 	hideTransportGroups = transportType => {
-		let	hidden = { ...this.state.hide };
+		let hidden = { ...this.state.hide };
 		hidden[transportType] = !hidden[transportType];
 		this.setState({ hide: hidden });
 	};
@@ -123,7 +123,9 @@ class SearchResults extends Component {
 										bsSize="large"
 										key="all"
 										onClick={this.showAllTransportGroups}
-										active={Object.keys(this.state.hide).every(k => !this.state.hide[k])}
+										active={Object.keys(this.state.hide).every(
+											k => !this.state.hide[k]
+										)}
 									>
 										Show All
 									</Button>

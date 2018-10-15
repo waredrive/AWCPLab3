@@ -7,9 +7,15 @@ class SearchBar extends Component {
 	state = {
 		searchResults: [],
 		searchHistoryStorage: [],
+		searchMinLength: 0,
 		isLoading: false,
 		touched: false
 	};
+
+	componentWillMount() {
+		const history = this.getSearchHistory();
+		this.setState({ searchHistoryStorage: history });
+	}
 
 	getSearchHistory() {
 		let storage = [];
@@ -97,11 +103,6 @@ class SearchBar extends Component {
 		this.fetchFromSessionStorage();
 	};
 
-	componentDidMount() {
-		const history = this.getSearchHistory();
-		this.setState({ searchHistoryStorage: history });
-	}
-
 	render() {
 		return (
 			<FormGroup style={{ width: '80%', margin: '10px auto' }}>
@@ -111,7 +112,7 @@ class SearchBar extends Component {
 						selectHintOnEnter
 						highlightOnlyResult
 						bsSize="large"
-						minLength={0}
+						minLength={this.state.searchMinLength}
 						placeholder="Station..."
 						filterBy={option => option.Name}
 						labelKey="Name"
