@@ -38,8 +38,8 @@ class SearchBar extends Component {
 
 	clearSearch = () => {
 		this.typeahead.getInstance().clear();
-		this.setState({ touched: false })
-	}
+		this.setState({ touched: false });
+	};
 	searchSelectedStation = station => {
 		if (station.length !== 1) {
 			return;
@@ -50,8 +50,8 @@ class SearchBar extends Component {
 				station[0].SiteId
 			}`
 		);
-			this.clearSearch();
-			this.typeahead.getInstance().blur();
+		this.clearSearch();
+		this.typeahead.getInstance().blur();
 	};
 
 	fetchFromApi = query => {
@@ -108,8 +108,8 @@ class SearchBar extends Component {
 				<InputGroup>
 					<AsyncTypeahead
 						isLoading={this.state.isLoading}
-						selectHintOnEnter={true}
-						highlightOnlyResult={true}
+						selectHintOnEnter
+						highlightOnlyResult
 						bsSize="large"
 						minLength={0}
 						placeholder="Station..."
@@ -127,10 +127,7 @@ class SearchBar extends Component {
 						ref={ref => (this.typeahead = ref)}
 					/>
 					<InputGroup.Button>
-						<Button
-							bsSize="large"
-							onClick={this.clearSearch}
-						>
+						<Button bsSize="large" onClick={this.clearSearch}>
 							Clear
 						</Button>
 					</InputGroup.Button>
