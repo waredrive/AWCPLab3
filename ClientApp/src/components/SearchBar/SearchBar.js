@@ -7,7 +7,7 @@ class SearchBar extends Component {
 	state = {
 		searchResults: [],
 		searchHistoryStorage: [],
-		searchMinLength: 0,
+		searchMinLength: 3,
 		isLoading: false,
 		touched: false
 	};
