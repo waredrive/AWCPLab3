@@ -92,13 +92,15 @@ class SearchBar extends Component {
 
 	fetchFromSessionStorage = () => {
 		const searchHistory = [...this.state.searchHistoryStorage];
-		this.setState({ searchResults: searchHistory });
+		const minLength = this.state.searchHistoryStorage.length > 0 ? 0 : 3;
+		this.setState({ searchResults: searchHistory, searchMinLength: minLength });
 	};
 
 	onFocusHandler = () => {
 		if (this.state.touched || !this.typeahead.state.query.length === 0) {
 			return;
 		}
+		console.log(this.typeahead);
 		this.setState({ touched: true });
 		this.fetchFromSessionStorage();
 	};
