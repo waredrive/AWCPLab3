@@ -100,7 +100,6 @@ class SearchBar extends Component {
 		if (this.state.touched || !this.typeahead.state.query.length === 0) {
 			return;
 		}
-		console.log(this.typeahead);
 		this.setState({ touched: true });
 		this.fetchFromSessionStorage();
 	};
