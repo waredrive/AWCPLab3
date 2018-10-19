@@ -125,13 +125,17 @@ class SearchBar extends Component {
 							: this.fetchFromSessionStorage();
 					}}
 					ref={ref => (this.typeahead = ref)}
-				/>{' '}
+				/>
 				<div className="input-group-append">
 					<button
 						className="btn btn-light btn-lg rounded-right"
 						onClick={this.clearSearch}
 					>
-						CLEAR
+						{this.props.isLoading ? (
+							<i class="fa fa-circle-o-notch fa-spin" />
+						) : (
+							<i className="fa fa-close" />
+						)}
 					</button>
 				</div>
 			</div>

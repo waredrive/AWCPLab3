@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { ListGroup, ListGroupItem, Button } from 'react-bootstrap';
 
 import DepartureDetails from '../DepartureDetails/DepartureDetails';
 import Spinner from '../../../components/Spinner/Spinner';
+import './DepartureItem.css';
 
 class DepartureItem extends Component {
 	state = {
@@ -11,14 +11,6 @@ class DepartureItem extends Component {
 		isLoading: false,
 		showDetails: false
 	};
-
-	// componentDidMount() {
-	// 	var req = require.context('../../../assets/images', false, /.*\.png$/);
-	// 	req.keys().forEach(function(key) {
-	// 		req(key);
-	// 	});
-	// 	console.log(req);
-	// }
 
 	formatTime = i => {
 		if (i < 10) {
@@ -61,9 +53,7 @@ class DepartureItem extends Component {
 				return response.json();
 			})
 			.then(response => {
-				// console.log('1', response);
 				if (response.status !== 'success' || !response.data) {
-					// console.log('2', response);
 					throw Error(response);
 				}
 
@@ -80,11 +70,8 @@ class DepartureItem extends Component {
 					intermediateStops: results,
 					isLoading: false
 				});
-				// console.log('3', response);
 			})
-			.catch(err => {
-				// console.log('4', err);
-			});
+			.catch(err => {});
 	};
 
 	onDepartureClickHandler = () => {
@@ -130,9 +117,8 @@ class DepartureItem extends Component {
 										</span>
 									</h5>
 									<span className="h5 text-dark">
-										{`${this.props.departure.StopAreaName} - ${
-											this.props.departure.Destination
-										}`}
+										{this.props.departure.StopAreaName} {' - '}
+										{this.props.departure.Destination}
 									</span>
 								</span>
 								<span className="d-flex justify-content-end align-items-center">

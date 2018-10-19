@@ -1,14 +1,17 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { ListGroup, ListGroupItem } from 'react-bootstrap';
 
 const departureDetails = props => (
-	<ListGroup>
-		<ListGroupItem key={props.intermediateStops.StartStation.SiteId}>
-			{props.intermediateStops.StartStation.Name}
-		</ListGroupItem>
+	<div className="list-group mt-0 mb-2">
+		<div className="list-group-item bg-light d-flex align-items-center h5 text-dark">
+			<i className="fa fa-circle-o mr-3 fa-2x text-info" />
+			<span className="font-weight-bold">
+				{props.intermediateStops.StartStation.Name}
+			</span>
+		</div>
 		{props.intermediateStops.MiddleStations.map((stop, index) => (
-			<ListGroupItem
+			<a
+				className="list-group-item bg-light d-flex align-items-center list-group-item-action h5 text-dark"
 				key={stop.SiteId + index}
 				href=""
 				onClick={e => {
@@ -20,10 +23,13 @@ const departureDetails = props => (
 					);
 				}}
 			>
+				<i className="fa fa-circle ml-2 mr-4 text-info" />
 				{stop.Name}
-			</ListGroupItem>
+			</a>
 		))}
-		<ListGroupItem
+
+		<a
+			className="list-group-item bg-light d-flex align-items-center  list-group-item-action h5 text-dark"
 			href=""
 			onClick={e => {
 				e.preventDefault();
@@ -35,9 +41,12 @@ const departureDetails = props => (
 			}}
 			key={props.intermediateStops.EndStation.SiteId}
 		>
-			{props.intermediateStops.EndStation.Name}
-		</ListGroupItem>
-	</ListGroup>
+			<i className="fa fa-circle-o mr-3 fa-2x text-info" />
+			<span className="font-weight-bold">
+				{props.intermediateStops.EndStation.Name}
+			</span>
+		</a>
+	</div>
 );
 
 export default withRouter(departureDetails);
