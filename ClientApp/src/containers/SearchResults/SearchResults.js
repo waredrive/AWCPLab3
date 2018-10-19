@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Button, ButtonGroup, Row } from 'react-bootstrap';
 
 import Spinner from '../../components/Spinner/Spinner';
 import DepartureGroup from './DepartureGroup/DepartureGroup';
+import './SearchResults.css';
 
 class SearchResults extends Component {
 	state = {
@@ -99,23 +99,6 @@ class SearchResults extends Component {
 					<Spinner />
 				) : (
 					<div>
-						{/* <h2>{this.props.match.params.stationName.replace(/_/g, ' / ')}</h2>
-						<Button
-							bsStyle="primary"
-							bsSize="large"
-							onClick={() =>
-								this.fetchFromApi(this.props.match.params.stationId)
-							}
-						>
-							UPDATE
-						</Button>
-						<Button
-							bsStyle="danger"
-							bsSize="large"
-							onClick={() => this.props.history.push('/')}
-						>
-							CLEAR
-						</Button> */}
 						<div className="btn-toolbar btn-lg d-flex justify-content-end pr-0 pb-2">
 							<button
 								className="btn btn-primary mr-1"
@@ -133,36 +116,49 @@ class SearchResults extends Component {
 								<i className="fa fa-trash fa-lg" />
 							</button>
 						</div>
-						<Row>
-							<ButtonGroup>
-								{Object.keys(this.state.results).length > 1 ? (
-									<Button
-										bsSize="large"
-										key="all"
-										onClick={this.showAllTransportGroups}
-										active={Object.keys(this.state.hide).every(
-											k => !this.state.hide[k]
-										)}
-									>
-										Show All
-									</Button>
-								) : null}
-								{Object.keys(this.state.results).map(transportType => {
-									return (
-										<Button
-											bsSize="large"
-											onClick={() => {
-												this.hideTransportGroups(transportType);
-											}}
-											active={!this.state.hide[transportType]}
-											key={transportType}
+						<div className="bg-dark rounded mb-3 pr-md-0 text-center text-white align-self-center">
+							<h3 className="p-2">
+								{this.props.match.params.stationName.replace(/_/g, ' / ')}
+							</h3>
+						</div>
+						{Object.keys(this.state.results).length > 1 ? (
+							<div className="bg-dark rounded mb-3 h5 d-flex justify-content-center py-2 text-light">
+								<ul className="nav nav-pills nav-filter">
+									<li className="nav-item" key="all">
+										<a
+											className={
+												Object.keys(this.state.hide).every(
+													k => !this.state.hide[k]
+												)
+													? 'nav-link filter active'
+													: 'nav-link filter'
+											}
+											onClick={this.showAllTransportGroups}
 										>
-											{transportType}
-										</Button>
-									);
-								})}
-							</ButtonGroup>
-						</Row>
+											SHOW ALL
+										</a>
+									</li>
+									{Object.keys(this.state.results).map(transportType => {
+										return (
+											<li className="nav-item ml-2" key={transportType}>
+												<a
+													className={
+														!this.state.hide[transportType]
+															? 'nav-link filter active'
+															: 'nav-link filter'
+													}
+													onClick={() => {
+														this.hideTransportGroups(transportType);
+													}}
+												>
+													{transportType}
+												</a>
+											</li>
+										);
+									})}
+								</ul>
+							</div>
+						) : null}
 						{Object.keys(this.state.results).map(transportGroup => {
 							return !this.state.hide[transportGroup] ? (
 								<DepartureGroup
