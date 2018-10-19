@@ -12,21 +12,32 @@ export default class App extends Component {
 	render() {
 		return (
 			<BrowserRouter basename={baseUrl}>
-				<React.Fragment>
-					<SearchBar />
-					<Switch>
-						<Route path="/:stationName/:stationId" component={SearchResults} />
-						<Route
-							path="/error"
-							component={() => {
-								return (
-									<ErrorMessage message="An Error has occurred while fetching data from SL. Please try again." />
-								);
-							}}
-						/>
-						<Route component={WelcomePage} />
-					</Switch>
-				</React.Fragment>
+				<main className="container">
+					<div className="row">
+						<div className="col-md-12 my-5" style={{ minWidth: '480px' }}>
+							<SearchBar />
+						</div>
+					</div>
+					<div className="row">
+						<div className="col-md-12" style={{ minWidth: '480px' }}>
+							<Switch>
+								<Route
+									path="/:stationName/:stationId"
+									component={SearchResults}
+								/>
+								<Route
+									path="/error"
+									component={() => {
+										return (
+											<ErrorMessage message="An Error has occurred while fetching data from SL. Please try again." />
+										);
+									}}
+								/>
+								<Route component={WelcomePage} />
+							</Switch>
+						</div>
+					</div>
+				</main>
 			</BrowserRouter>
 		);
 	}

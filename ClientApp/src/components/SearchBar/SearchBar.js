@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import { withRouter } from 'react-router-dom';
-import { FormGroup, InputGroup, Button } from 'react-bootstrap';
 
 class SearchBar extends Component {
 	state = {
@@ -106,35 +105,36 @@ class SearchBar extends Component {
 
 	render() {
 		return (
-			<FormGroup style={{ width: '80%', margin: '10px auto' }}>
-				<InputGroup>
-					<AsyncTypeahead
-						isLoading={this.state.isLoading}
-						selectHintOnEnter
-						highlightOnlyResult
-						bsSize="large"
-						minLength={this.state.searchMinLength}
-						placeholder="Station..."
-						filterBy={option => option.Name}
-						labelKey="Name"
-						useCache={false}
-						options={this.state.searchResults}
-						onFocus={this.onFocusHandler}
-						onChange={selected => this.searchSelectedStation(selected)}
-						onSearch={query => {
-							query.trim().length > 2
-								? this.fetchFromApi(query)
-								: this.fetchFromSessionStorage();
-						}}
-						ref={ref => (this.typeahead = ref)}
-					/>
-					<InputGroup.Button>
-						<Button bsSize="large" onClick={this.clearSearch}>
-							Clear
-						</Button>
-					</InputGroup.Button>
-				</InputGroup>
-			</FormGroup>
+			<div className="input-group mt-1">
+				<AsyncTypeahead
+					isLoading={this.state.isLoading}
+					selectHintOnEnter
+					highlightOnlyResult
+					bsSize="large"
+					minLength={this.state.searchMinLength}
+					placeholder="Station..."
+					filterBy={option => option.Name}
+					labelKey="Name"
+					useCache={false}
+					options={this.state.searchResults}
+					onFocus={this.onFocusHandler}
+					onChange={selected => this.searchSelectedStation(selected)}
+					onSearch={query => {
+						query.trim().length > 2
+							? this.fetchFromApi(query)
+							: this.fetchFromSessionStorage();
+					}}
+					ref={ref => (this.typeahead = ref)}
+				/>{' '}
+				<div className="input-group-append">
+					<button
+						className="btn btn-light btn-lg rounded-right"
+						onClick={this.clearSearch}
+					>
+						CLEAR
+					</button>
+				</div>
+			</div>
 		);
 	}
 }

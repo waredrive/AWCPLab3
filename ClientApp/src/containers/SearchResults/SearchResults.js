@@ -99,7 +99,7 @@ class SearchResults extends Component {
 					<Spinner />
 				) : (
 					<div>
-						<h2>{this.props.match.params.stationName.replace(/_/g, ' / ')}</h2>
+						{/* <h2>{this.props.match.params.stationName.replace(/_/g, ' / ')}</h2>
 						<Button
 							bsStyle="primary"
 							bsSize="large"
@@ -115,7 +115,24 @@ class SearchResults extends Component {
 							onClick={() => this.props.history.push('/')}
 						>
 							CLEAR
-						</Button>
+						</Button> */}
+						<div className="btn-toolbar btn-lg d-flex justify-content-end pr-0 pb-2">
+							<button
+								className="btn btn-primary mr-1"
+								onClick={() =>
+									this.fetchFromApi(this.props.match.params.stationId)
+								}
+							>
+								Updated: ADD TIME STAMP
+								<i className="fa fa-refresh fa-lg ml-2" />
+							</button>
+							<button
+								className="btn btn-danger btn-lg ml-1"
+								onClick={() => this.props.history.push('/')}
+							>
+								<i className="fa fa-trash fa-lg" />
+							</button>
+						</div>
 						<Row>
 							<ButtonGroup>
 								{Object.keys(this.state.results).length > 1 ? (
