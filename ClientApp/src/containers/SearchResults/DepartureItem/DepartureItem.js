@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { ListGroup, ListGroupItem } from 'react-bootstrap';
+import { ListGroup, ListGroupItem, Button } from 'react-bootstrap';
 
 import DepartureDetails from '../DepartureDetails/DepartureDetails';
 import Spinner from '../../../components/Spinner/Spinner';
@@ -11,6 +11,14 @@ class DepartureItem extends Component {
 		isLoading: false,
 		showDetails: false
 	};
+
+	// componentDidMount() {
+	// 	var req = require.context('../../../assets/images', false, /.*\.png$/);
+	// 	req.keys().forEach(function(key) {
+	// 		req(key);
+	// 	});
+	// 	console.log(req);
+	// }
 
 	formatTime = i => {
 		if (i < 10) {
@@ -93,15 +101,27 @@ class DepartureItem extends Component {
 	render() {
 		return (
 			<ListGroup>
-				<ListGroupItem
+				<Button
 					href=""
+					bsSize="large"
+					bsStyle="info"
+					block
 					onClick={e => {
 						e.preventDefault();
 						this.onDepartureClickHandler();
 					}}
 				>
-					{this.props.departure.Destination}
-				</ListGroupItem>
+					<img
+						src={require('../../../assets/images/' +
+							this.props.departure.TransportMode +
+							'.png')}
+						alt={this.props.departure.TransportMode}
+						style={{ width: '40px' }}
+					/>
+					<h4>{`${this.props.departure.StopAreaName} - ${
+						this.props.departure.Destination
+					}`}</h4>
+				</Button>
 				{this.state.showDetails ? (
 					this.state.isLoading ||
 					Object.keys(this.state.intermediateStops).length !== 3 ? (
