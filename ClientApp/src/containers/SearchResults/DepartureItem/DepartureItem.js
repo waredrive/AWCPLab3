@@ -100,41 +100,66 @@ class DepartureItem extends Component {
 
 	render() {
 		return (
-			<ListGroup>
-				<Button
-					href=""
-					bsSize="large"
-					bsStyle="info"
-					block
-					onClick={e => {
-						e.preventDefault();
-						this.onDepartureClickHandler();
-					}}
-				>
-					<img
-						src={require('../../../assets/images/' +
-							this.props.departure.TransportMode +
-							'.png')}
-						alt={this.props.departure.TransportMode}
-						style={{ width: '40px' }}
-					/>
-					<h4>{`${this.props.departure.StopAreaName} - ${
-						this.props.departure.Destination
-					}`}</h4>
-				</Button>
-				{this.state.showDetails ? (
-					this.state.isLoading ||
-					Object.keys(this.state.intermediateStops).length !== 3 ? (
-						<Spinner />
-					) : (
-						<ListGroupItem>
-							<DepartureDetails
-								intermediateStops={this.state.intermediateStops}
-							/>
-						</ListGroupItem>
-					)
-				) : null}
-			</ListGroup>
+			<div className="panel-group">
+				<div className="panel panel-default">
+					<div className="panel-heading">
+						<h6 className="panel-title">
+							<button
+								className="btn btn-light btn-block d-flex justify-content-between align-items-center"
+								onClick={e => {
+									e.preventDefault();
+									this.onDepartureClickHandler();
+								}}
+							>
+								<span className="d-flex justify-content-start align-items-center text-left">
+									<img
+										className="mr-2 mr-md-3"
+										style={{ width: '40px' }}
+										src={require('../../../assets/images/' +
+											this.props.departure.TransportMode +
+											'.png')}
+										alt={this.props.departure.TransportMode}
+									/>
+									<h5>
+										<span
+											className="badge badge-info badge-pill mr-2 mr-md-5"
+											style={{ width: '90px' }}
+										>
+											Line:
+											{this.props.departure.LineNumber}
+										</span>
+									</h5>
+									<span className="h5 text-dark">
+										{`${this.props.departure.StopAreaName} - ${
+											this.props.departure.Destination
+										}`}
+									</span>
+								</span>
+								<span className="d-flex justify-content-end align-items-center">
+									{this.props.departure.DisplayTime.indexOf(':') > -1 ? (
+										<span className="badge badge-danger badge-pill ml-1 ml-md-4 font-weight-normal">
+											NOT <br /> REAL TIME
+										</span>
+									) : null}
+									<span className="font-weight-bold ml-1 ml-md-4 h5">
+										{this.props.departure.DisplayTime}
+									</span>
+								</span>
+							</button>
+						</h6>
+						{this.state.showDetails ? (
+							this.state.isLoading ||
+							Object.keys(this.state.intermediateStops).length !== 3 ? (
+								<Spinner />
+							) : (
+								<DepartureDetails
+									intermediateStops={this.state.intermediateStops}
+								/>
+							)
+						) : null}
+					</div>
+				</div>
+			</div>
 		);
 	}
 }
