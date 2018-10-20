@@ -8,7 +8,7 @@ const warningMessage = props => (
 	>
 		<i className="fa fa-exclamation-triangle fa-lg pr-3" />
 		{props.children}
-		<i className="fa fa-exclamation-triangle fa-lg pr-3" />
+		<i className="fa fa-exclamation-triangle fa-lg pl-3" />
 	</Alert>
 );
 

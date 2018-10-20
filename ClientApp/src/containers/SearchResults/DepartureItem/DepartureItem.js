@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import DepartureDetails from '../DepartureDetails/DepartureDetails';
 import Spinner from '../../../components/Spinner/Spinner';
 import ErrorMessage from '../../../components/ErrorMessage/ErrorMessage';
+import WarningMessage from '../../../components/WarningMessage/WarningMessage';
 import './DepartureItem.css';
 
 class DepartureItem extends Component {
@@ -94,8 +95,10 @@ class DepartureItem extends Component {
 	render() {
 		let departureDetails = null;
 		if (this.state.showDetails) {
-			if (!this.state.isError && (this.state.isLoading || Object.keys(this.state.intermediateStops).length !== 3)) {
+			if (!this.state.isError && this.state.isLoading) {
 				departureDetails = <Spinner />;
+			} else if (!this.state.isError && Object.keys(this.state.intermediateStops).length !== 3) {
+				departureDetails = <WarningMessage>There is no registered route for this departure.</WarningMessage>;
 			} else if (this.state.isError) {
 				departureDetails = (
 					<ErrorMessage>An Error has occurred while fetching data from SL. Please try again.</ErrorMessage>
