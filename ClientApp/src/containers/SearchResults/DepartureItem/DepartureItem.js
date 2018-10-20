@@ -113,8 +113,7 @@ class DepartureItem extends Component {
 										</span>
 									</h5>
 									<span className="h5 text-dark">
-										{this.props.departure.StopAreaName} {' - '}
-										{this.props.departure.Destination}
+										{`${this.props.departure.StopAreaName} -  ${this.props.departure.Destination}`}
 									</span>
 								</span>
 								<span className="d-flex justify-content-end align-items-center">
