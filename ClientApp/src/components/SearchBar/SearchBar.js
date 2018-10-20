@@ -50,11 +50,7 @@ class SearchBar extends Component {
 			return;
 		}
 		this.addToSearchHistory(station[0]);
-		this.props.history.push(
-			`/${encodeURIComponent(station[0].Name.replace(/\//g, '_'))}/${
-				station[0].SiteId
-			}`
-		);
+		this.props.history.push(`/${encodeURIComponent(station[0].Name.replace(/\//g, '_'))}/${station[0].SiteId}`);
 		this.clearSearch();
 		this.typeahead.getInstance().blur();
 	};
@@ -78,8 +74,7 @@ class SearchBar extends Component {
 					val =>
 						val.Name.toLowerCase()
 							.trim()
-							.includes(query.toLowerCase().trim()) ||
-						val.SiteId.trim().includes(query.trim())
+							.includes(query.toLowerCase().trim()) || val.SiteId.trim().includes(query.trim())
 				);
 				this.setState({
 					isLoading: false,
@@ -120,22 +115,13 @@ class SearchBar extends Component {
 					onFocus={this.onFocusHandler}
 					onChange={selected => this.searchSelectedStation(selected)}
 					onSearch={query => {
-						query.trim().length > 2
-							? this.fetchFromApi(query)
-							: this.fetchFromSessionStorage();
+						query.trim().length > 2 ? this.fetchFromApi(query) : this.fetchFromSessionStorage();
 					}}
 					ref={ref => (this.typeahead = ref)}
 				/>
 				<div className="input-group-append">
-					<button
-						className="btn btn-light btn-lg rounded-right"
-						onClick={this.clearSearch}
-					>
-						{this.props.isLoading ? (
-							<i class="fa fa-circle-o-notch fa-spin" />
-						) : (
-							<i className="fa fa-close" />
-						)}
+					<button className="btn btn-light btn-lg rounded-right" onClick={this.clearSearch}>
+						{this.props.isLoading ? <i class="fa fa-circle-o-notch fa-spin" /> : <i className="fa fa-close" />}
 					</button>
 				</div>
 			</div>

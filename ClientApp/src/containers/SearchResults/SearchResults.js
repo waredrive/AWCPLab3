@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import Spinner from '../../components/Spinner/Spinner';
 import DepartureGroup from './DepartureGroup/DepartureGroup';
-import './SearchResults.css';
+import SearchResultToolbar from '../../components/SearchResultToolbar/SearchResultToolbar';
 
 class SearchResults extends Component {
 	state = {
@@ -19,13 +19,7 @@ class SearchResults extends Component {
 	};
 
 	fetchFromApi = stationId => {
-		const possibleTransportTypes = [
-			'Metros',
-			'Buses',
-			'Trains',
-			'Trams',
-			'Ships'
-		];
+		const possibleTransportTypes = ['Metros', 'Buses', 'Trains', 'Trams', 'Ships'];
 
 		this.setState({ isLoading: true });
 
@@ -59,7 +53,6 @@ class SearchResults extends Component {
 					isLoading: false,
 					latestUpdate: latestUpdate
 				});
-				// console.log(response);
 			})
 			.catch(err => {
 				this.props.history.push('/error');
@@ -72,24 +65,30 @@ class SearchResults extends Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		if (
-			prevProps.match.params.stationId === this.props.match.params.stationId
-		) {
+		if (prevProps.match.params.stationId === this.props.match.params.stationId) {
 			return;
 		}
 		this.fetchFromApi(this.props.match.params.stationId);
 		this.showAllTransportGroups();
 	}
 
-	showAllTransportGroups = () => {
+	onShowAllTransportGroupsButtonClickHandler = () => {
 		let hidden = Object.keys(this.state.hide).map(k => (k = false));
 		this.setState({ hide: hidden });
 	};
 
-	hideTransportGroups = transportType => {
+	onHideTransportGroupsButtonClickHandler = transportType => {
 		let hidden = { ...this.state.hide };
 		hidden[transportType] = !hidden[transportType];
 		this.setState({ hide: hidden });
+	};
+
+	onUpdateButtonClickHandler = () => {
+		this.fetchFromApi(this.props.match.params.stationId);
+	};
+
+	onClearResultsButtonClickHandler = () => {
+		this.props.history.push('/');
 	};
 
 	render() {
@@ -99,66 +98,15 @@ class SearchResults extends Component {
 					<Spinner />
 				) : (
 					<div>
-						<div className="btn-toolbar btn-lg d-flex justify-content-end pr-0 pb-2">
-							<button
-								className="btn btn-primary mr-1"
-								onClick={() =>
-									this.fetchFromApi(this.props.match.params.stationId)
-								}
-							>
-								Updated: ADD TIME STAMP
-								<i className="fa fa-refresh fa-lg ml-2" />
-							</button>
-							<button
-								className="btn btn-danger btn-lg ml-1"
-								onClick={() => this.props.history.push('/')}
-							>
-								<i className="fa fa-trash fa-lg" />
-							</button>
-						</div>
-						<div className="bg-dark rounded mb-3 pr-md-0 text-center text-white align-self-center">
-							<h3 className="p-2">
-								{this.props.match.params.stationName.replace(/_/g, ' / ')}
-							</h3>
-						</div>
-						{Object.keys(this.state.results).length > 1 ? (
-							<div className="bg-dark rounded mb-3 h5 d-flex justify-content-center py-2 text-light">
-								<ul className="nav nav-pills nav-filter">
-									<li className="nav-item" key="all">
-										<a
-											className={
-												Object.keys(this.state.hide).every(
-													k => !this.state.hide[k]
-												)
-													? 'nav-link filter active'
-													: 'nav-link filter'
-											}
-											onClick={this.showAllTransportGroups}
-										>
-											SHOW ALL
-										</a>
-									</li>
-									{Object.keys(this.state.results).map(transportType => {
-										return (
-											<li className="nav-item ml-2" key={transportType}>
-												<a
-													className={
-														!this.state.hide[transportType]
-															? 'nav-link filter active'
-															: 'nav-link filter'
-													}
-													onClick={() => {
-														this.hideTransportGroups(transportType);
-													}}
-												>
-													{transportType}
-												</a>
-											</li>
-										);
-									})}
-								</ul>
-							</div>
-						) : null}
+						<SearchResultToolbar
+							searchResults={this.state.results}
+							hidden={this.state.hide}
+							stationName={this.props.match.params.stationName.replace(/_/g, ' / ')}
+							onUpdateButtonClick={this.onUpdateButtonClickHandler}
+							onClearResultsButtonClick={this.onClearResultsButtonClickHandler}
+							onShowAllTransportGroupsButtonClick={this.onShowAllTransportGroupsButtonClickHandler}
+							onHideTransportGroupsButtonClick={this.onHideTransportGroupsButtonClickHandler}
+						/>
 						{Object.keys(this.state.results).map(transportGroup => {
 							return !this.state.hide[transportGroup] ? (
 								<DepartureGroup

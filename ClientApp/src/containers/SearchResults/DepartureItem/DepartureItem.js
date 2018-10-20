@@ -35,9 +35,7 @@ class DepartureItem extends Component {
 			`${transportTypesIds[departure.TransportMode]}/` +
 			`${departure.LineNumber}/` +
 			`${departure.TimeTabledDateTime.replace(/:/g, '_')}/` +
-			`${this.formatTime(date.getHours())}_${this.formatTime(
-				date.getMinutes()
-			)}`;
+			`${this.formatTime(date.getHours())}_${this.formatTime(date.getMinutes())}`;
 
 		this.setState({ isLoading: true });
 		fetch('api/stops/' + params, {
@@ -76,10 +74,7 @@ class DepartureItem extends Component {
 
 	onDepartureClickHandler = () => {
 		if (Object.keys(this.state.intermediateStops).length !== 3) {
-			this.fetchFromApi(
-				this.props.match.params.stationId,
-				this.props.departure
-			);
+			this.fetchFromApi(this.props.match.params.stationId, this.props.departure);
 		}
 		const showDetails = !this.state.showDetails;
 		this.setState({ showDetails: showDetails });
@@ -102,16 +97,11 @@ class DepartureItem extends Component {
 									<img
 										className="mr-2 mr-md-3"
 										style={{ width: '40px' }}
-										src={require('../../../assets/images/' +
-											this.props.departure.TransportMode +
-											'.png')}
+										src={require('../../../assets/images/' + this.props.departure.TransportMode + '.png')}
 										alt={this.props.departure.TransportMode}
 									/>
 									<h5>
-										<span
-											className="badge badge-info badge-pill mr-2 mr-md-5"
-											style={{ width: '90px' }}
-										>
+										<span className="badge badge-info badge-pill mr-2 mr-md-5" style={{ width: '90px' }}>
 											Line:
 											{this.props.departure.LineNumber}
 										</span>
@@ -127,20 +117,15 @@ class DepartureItem extends Component {
 											NOT <br /> REAL TIME
 										</span>
 									) : null}
-									<span className="font-weight-bold ml-1 ml-md-4 h5">
-										{this.props.departure.DisplayTime}
-									</span>
+									<span className="font-weight-bold ml-1 ml-md-4 h5">{this.props.departure.DisplayTime}</span>
 								</span>
 							</button>
 						</h6>
 						{this.state.showDetails ? (
-							this.state.isLoading ||
-							Object.keys(this.state.intermediateStops).length !== 3 ? (
+							this.state.isLoading || Object.keys(this.state.intermediateStops).length !== 3 ? (
 								<Spinner />
 							) : (
-								<DepartureDetails
-									intermediateStops={this.state.intermediateStops}
-								/>
+								<DepartureDetails intermediateStops={this.state.intermediateStops} />
 							)
 						) : null}
 					</div>

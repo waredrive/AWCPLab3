@@ -21,10 +21,7 @@ export default class App extends Component {
 					<div className="row">
 						<div className="col-md-12" style={{ minWidth: '480px' }}>
 							<Switch>
-								<Route
-									path="/:stationName/:stationId"
-									component={SearchResults}
-								/>
+								<Route path="/:stationName/:stationId" component={SearchResults} />
 								<Route
 									path="/error"
 									component={() => {
