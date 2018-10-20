@@ -9,6 +9,7 @@ class DepartureItem extends Component {
 	state = {
 		intermediateStops: {},
 		isLoading: false,
+		isError: false,
 		showDetails: false
 	};
 
@@ -71,7 +72,8 @@ class DepartureItem extends Component {
 			})
 			.catch(err => {
 				this.setState({
-					isLoading: false
+					isLoading: false,
+					isError: true
 				});
 			});
 	};

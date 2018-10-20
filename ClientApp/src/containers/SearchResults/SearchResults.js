@@ -7,6 +7,7 @@ import SearchResultToolbar from '../../components/SearchResultToolbar/SearchResu
 class SearchResults extends Component {
 	state = {
 		isLoading: false,
+		isError: false,
 		results: {},
 		latestUpdate: null,
 		hide: {
@@ -68,8 +69,7 @@ class SearchResults extends Component {
 				});
 			})
 			.catch(err => {
-				console.log(err);
-				this.setState({ isLoading: false });
+				this.setState({ isLoading: false, isError: true });
 				this.props.history.push('/error');
 			});
 	};

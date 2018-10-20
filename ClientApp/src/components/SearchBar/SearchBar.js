@@ -8,6 +8,7 @@ class SearchBar extends Component {
 		searchHistoryStorage: [],
 		searchMinLength: 3,
 		isLoading: false,
+		isError: false,
 		touched: false
 	};
 
@@ -83,7 +84,7 @@ class SearchBar extends Component {
 				});
 			})
 			.catch(err => {
-				this.setState({ isLoading: false });
+				this.setState({ isLoading: false, isError: true });
 			});
 	};
 
