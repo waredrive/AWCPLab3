@@ -10,7 +10,7 @@ namespace Lernia.Controllers
     public class ApiController : Controller
     {
         const string TYPEAHEAD_KEY = "2c1b9845ad4d4ac5b2fe48b4c25b9bb7";
-        const string SEARCH_KEY = "a8f11745ef554c52aeb27e9c27daf361"; 
+        const string SEARCH_KEY = "a8f11745ef554c52aeb27e9c27daf361";
 
         [Route("typeahead/{term}")]
         public async Task Typeahead([FromRoute] string term)
@@ -21,13 +21,13 @@ namespace Lernia.Controllers
         [Route("search/{term}")]
         public async Task Search([FromRoute] string term)
         {
-            await Query($"https://api.sl.se/api2/realtimedeparturesV4.json?key={SEARCH_KEY}&siteid={term}&timewindow=60"); 
+            await Query($"https://api.sl.se/api2/realtimedeparturesV4.json?key={SEARCH_KEY}&siteid={term}&timewindow=60");
         }
 
         [Route("stops/{originID}/{destination}/{transportType}/{lineNumber}/{departureTime}/{currentTime}")]
         public async Task Stops([FromRoute] string originID, string destination, string transportType, string lineNumber, string departureTime, string currentTime)
         {
-            await Query($"https://sl.se/api/RealTime/GetStationsInBetween/{originID}/{destination}/{transportType}/{lineNumber}/{departureTime}/{currentTime}"); 
+            await Query($"https://sl.se/api/RealTime/GetStationsInBetween/{originID}/{destination}/{transportType}/{lineNumber}/{departureTime}/{currentTime}");
         }
 
         private async Task Query(string url)

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Spinner from '../../components/Spinner/Spinner';
 import DepartureGroup from './DepartureGroup/DepartureGroup';
 import SearchResultToolbar from '../../components/SearchResultToolbar/SearchResultToolbar';
+import WarningMessage from '../../components/WarningMessage/WarningMessage';
 
 class SearchResults extends Component {
 	state = {
@@ -94,6 +95,21 @@ class SearchResults extends Component {
 	};
 
 	render() {
+		let departureGroups = null;
+		if (Object.getOwnPropertyNames(this.state.results).length === 0) {
+			departureGroups = <WarningMessage>There are no registered departures from this address.</WarningMessage>;
+		} else {
+			departureGroups = Object.keys(this.state.results).map(transportGroup => {
+				return !this.state.hide[transportGroup] ? (
+					<DepartureGroup
+						key={transportGroup}
+						transportType={transportGroup}
+						departures={this.state.results[transportGroup]}
+					/>
+				) : null;
+			});
+		}
+
 		return (
 			<React.Fragment>
 				{this.state.isLoading ? (
@@ -110,15 +126,7 @@ class SearchResults extends Component {
 							onHideTransportGroupsButtonClick={this.onHideTransportGroupsButtonClickHandler}
 							updated={this.state.latestUpdate}
 						/>
-						{Object.keys(this.state.results).map(transportGroup => {
-							return !this.state.hide[transportGroup] ? (
-								<DepartureGroup
-									key={transportGroup}
-									transportType={transportGroup}
-									departures={this.state.results[transportGroup]}
-								/>
-							) : null;
-						})}
+						{departureGroups}
 					</div>
 				)}
 			</React.Fragment>
