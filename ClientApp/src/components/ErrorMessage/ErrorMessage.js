@@ -7,7 +7,7 @@ const errorMessage = props => (
 		className="d-flex align-items-center justify-content-center text-center h5 font-weight-normal"
 	>
 		<i className="fa fa-exclamation-circle fa-lg pr-3" />
-		{props.message}
+		{props.children}
 		<i className="fa fa-exclamation-circle fa-lg pl-3" />
 	</Alert>
 );

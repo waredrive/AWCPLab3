@@ -26,7 +26,7 @@ export default class App extends Component {
 									path="/error"
 									component={() => {
 										return (
-											<ErrorMessage message="An Error has occurred while fetching data from SL. Please try again." />
+											<ErrorMessage>An Error has occurred while fetching data from SL. Please try again.</ErrorMessage>
 										);
 									}}
 								/>

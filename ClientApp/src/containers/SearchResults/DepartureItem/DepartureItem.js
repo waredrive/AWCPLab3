@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 
 import DepartureDetails from '../DepartureDetails/DepartureDetails';
 import Spinner from '../../../components/Spinner/Spinner';
+import ErrorMessage from '../../../components/ErrorMessage/ErrorMessage';
 import './DepartureItem.css';
 
 class DepartureItem extends Component {
@@ -79,14 +80,31 @@ class DepartureItem extends Component {
 	};
 
 	onDepartureClickHandler = () => {
+		let isError = this.state.isError;
+		if (this.state.showDetails && isError) {
+			isError = false;
+		}
 		if (Object.keys(this.state.intermediateStops).length !== 3) {
 			this.fetchFromApi(this.props.match.params.stationId, this.props.departure);
 		}
 		const showDetails = !this.state.showDetails;
-		this.setState({ showDetails: showDetails });
+		this.setState({ showDetails: showDetails, isError: isError });
 	};
 
 	render() {
+		let departureDetails = null;
+		if (this.state.showDetails) {
+			if (!this.state.isError && (this.state.isLoading || Object.keys(this.state.intermediateStops).length !== 3)) {
+				departureDetails = <Spinner />;
+			} else if (this.state.isError) {
+				departureDetails = (
+					<ErrorMessage>An Error has occurred while fetching data from SL. Please try again.</ErrorMessage>
+				);
+			} else {
+				departureDetails = <DepartureDetails intermediateStops={this.state.intermediateStops} />;
+			}
+		}
+
 		return (
 			<div className="panel-group">
 				<div className="panel panel-default">
@@ -126,13 +144,7 @@ class DepartureItem extends Component {
 								</span>
 							</button>
 						</h6>
-						{this.state.showDetails ? (
-							this.state.isLoading || Object.keys(this.state.intermediateStops).length !== 3 ? (
-								<Spinner />
-							) : (
-								<DepartureDetails intermediateStops={this.state.intermediateStops} />
-							)
-						) : null}
+						{departureDetails}
 					</div>
 				</div>
 			</div>
