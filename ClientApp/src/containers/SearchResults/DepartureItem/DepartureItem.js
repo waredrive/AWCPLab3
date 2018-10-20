@@ -69,7 +69,11 @@ class DepartureItem extends Component {
 					isLoading: false
 				});
 			})
-			.catch(err => {});
+			.catch(err => {
+				this.setState({
+					isLoading: false
+				});
+			});
 	};
 
 	onDepartureClickHandler = () => {

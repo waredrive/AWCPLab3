@@ -45,6 +45,7 @@ class SearchBar extends Component {
 		this.typeahead.getInstance().clear();
 		this.setState({ touched: false });
 	};
+
 	searchSelectedStation = station => {
 		if (station.length !== 1) {
 			return;
@@ -81,7 +82,9 @@ class SearchBar extends Component {
 					searchResults: filteredResponse
 				});
 			})
-			.catch(err => console.log(err));
+			.catch(err => {
+				this.setState({ isLoading: false });
+			});
 	};
 
 	fetchFromSessionStorage = () => {

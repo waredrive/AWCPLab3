@@ -5,7 +5,7 @@ const searchResultToolbar = props => (
 	<div>
 		<div className="btn-toolbar btn-lg d-flex justify-content-end pr-0 pb-2">
 			<button className="btn btn-primary mr-1" onClick={props.onUpdateButtonClick}>
-				Updated: ADD TIME STAMP
+				Updated: {props.updated}
 				<i className="fa fa-refresh fa-lg ml-2" />
 			</button>
 			<button className="btn btn-danger btn-lg ml-1" onClick={props.onClearResultsButtonClick}>

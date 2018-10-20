@@ -18,6 +18,18 @@ class SearchResults extends Component {
 		}
 	};
 
+	componentDidMount() {
+		this.fetchFromApi(this.props.match.params.stationId);
+	}
+
+	componentDidUpdate(prevProps) {
+		if (prevProps.match.params.stationId === this.props.match.params.stationId) {
+			return;
+		}
+		this.fetchFromApi(this.props.match.params.stationId);
+		this.onShowAllTransportGroupsButtonClickHandler();
+	}
+
 	fetchFromApi = stationId => {
 		const possibleTransportTypes = ['Metros', 'Buses', 'Trains', 'Trams', 'Ships'];
 
@@ -47,30 +59,20 @@ class SearchResults extends Component {
 					});
 					return obj;
 				}, {});
-				const latestUpdate = response.ResponseData.LatestUpdate;
+				const latestUpdate = new Date(response.ResponseData.LatestUpdate);
+				const updated = `${latestUpdate.getHours()}:${latestUpdate.getMinutes()}`;
 				this.setState({
 					results: results,
 					isLoading: false,
-					latestUpdate: latestUpdate
+					latestUpdate: updated
 				});
 			})
 			.catch(err => {
-				this.props.history.push('/error');
 				console.log(err);
+				this.setState({ isLoading: false });
+				this.props.history.push('/error');
 			});
 	};
-
-	componentDidMount() {
-		this.fetchFromApi(this.props.match.params.stationId);
-	}
-
-	componentDidUpdate(prevProps) {
-		if (prevProps.match.params.stationId === this.props.match.params.stationId) {
-			return;
-		}
-		this.fetchFromApi(this.props.match.params.stationId);
-		this.showAllTransportGroups();
-	}
 
 	onShowAllTransportGroupsButtonClickHandler = () => {
 		let hidden = Object.keys(this.state.hide).map(k => (k = false));
@@ -106,6 +108,7 @@ class SearchResults extends Component {
 							onClearResultsButtonClick={this.onClearResultsButtonClickHandler}
 							onShowAllTransportGroupsButtonClick={this.onShowAllTransportGroupsButtonClickHandler}
 							onHideTransportGroupsButtonClick={this.onHideTransportGroupsButtonClickHandler}
+							updated={this.state.latestUpdate}
 						/>
 						{Object.keys(this.state.results).map(transportGroup => {
 							return !this.state.hide[transportGroup] ? (
