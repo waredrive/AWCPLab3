@@ -13,14 +13,7 @@ class SearchResults extends Component {
 		isError: false,
 		results: {},
 		latestUpdate: null,
-		show: {
-			Metros: true,
-			Buses: true,
-			Trains: true,
-			Trams: true,
-			Ships: true,
-			All: true
-		}
+		show: {}
 	};
 
 	componentDidMount() {
@@ -40,6 +33,12 @@ class SearchResults extends Component {
 			i = '0' + i;
 		}
 		return i;
+	};
+
+	getTransportTypesToShow = results => {
+		let transportTypes = {};
+		Object.keys(results).map(k => (transportTypes[k] = true));
+		return transportTypes;
 	};
 
 	fetchFromApi = stationId => {
@@ -73,13 +72,18 @@ class SearchResults extends Component {
 				}, {});
 				const latestUpdate = new Date(response.ResponseData.LatestUpdate);
 				const updated = `${this.formatTime(latestUpdate.getHours())}:${this.formatTime(latestUpdate.getMinutes())}`;
+
+				const transportTypes = this.getTransportTypesToShow(results);
+
 				this.setState({
 					results: results,
 					isLoading: false,
-					latestUpdate: updated
+					latestUpdate: updated,
+					show: transportTypes
 				});
 			})
 			.catch(err => {
+				console.log(err);
 				this.setState({ isLoading: false, isError: true });
 				this.props.history.push('/error');
 			});
@@ -89,7 +93,6 @@ class SearchResults extends Component {
 		let shown = {};
 		Object.keys(this.state.show).map(k => (shown[k] = true));
 		this.setState({ show: shown });
-		console.log(this.state.show);
 	};
 
 	onShowTransportGroupsButtonClickHandler = transportType => {
@@ -97,8 +100,11 @@ class SearchResults extends Component {
 		if (Object.values(this.state.show).every(v => v)) {
 			Object.keys(this.state.show).map(k => (shown[k] = false));
 		}
-
 		shown[transportType] = !shown[transportType];
+		if (Object.values(shown).every(v => !v)) {
+			this.onShowAllTransportGroupsButtonClickHandler();
+			return;
+		}
 		this.setState({ show: shown });
 	};
 

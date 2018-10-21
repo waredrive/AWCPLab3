@@ -20,7 +20,7 @@ const searchResultToolbar = props => (
 				<ul className="nav nav-pills nav-filter justify-content-center">
 					<li className="nav-item ml-2 mt-2" key="all">
 						<a
-							className={props.shown['All'] ? 'nav-link filter active' : 'nav-link filter'}
+							className={Object.values(props.shown).every(v => v) ? 'nav-link filter active' : 'nav-link filter'}
 							onClick={props.onShowAllTransportGroupsButtonClick}
 						>
 							SHOW ALL
@@ -31,7 +31,9 @@ const searchResultToolbar = props => (
 							<li className="nav-item ml-2 mt-2" key={transportType}>
 								<a
 									className={
-										props.shown[transportType] && !props.shown['All'] ? 'nav-link filter active' : 'nav-link filter'
+										props.shown[transportType] && !Object.values(props.shown).every(v => v)
+											? 'nav-link filter active'
+											: 'nav-link filter'
 									}
 									onClick={() => {
 										props.onShowTransportGroupsButtonClick(transportType);
