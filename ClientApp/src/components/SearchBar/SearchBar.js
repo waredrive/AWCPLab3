@@ -62,7 +62,7 @@ class SearchBar extends Component {
 
 	fetchFromApi = query => {
 		this.setState({ loading: true });
-		fetch('api/typeaheadd/' + query, {
+		fetch('api/typeahead/' + query, {
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json'
