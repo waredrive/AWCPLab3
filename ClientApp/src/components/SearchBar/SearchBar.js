@@ -47,6 +47,7 @@ class SearchBar extends Component {
 
 	onClearSearchButtonClickHandler = () => {
 		this.typeahead.getInstance().clear();
+		this.typeahead.getInstance().focus();
 		this.setState({ touched: false, isNoMatch: false });
 	};
 
