@@ -5,18 +5,21 @@ import DepartureGroup from './DepartureGroup/DepartureGroup';
 import SearchResultToolbar from '../../components/SearchResultToolbar/SearchResultToolbar';
 import WarningMessage from '../../components/WarningMessage/WarningMessage';
 
+//TODO: cancel fetch on unmount
+
 class SearchResults extends Component {
 	state = {
 		isLoading: false,
 		isError: false,
 		results: {},
 		latestUpdate: null,
-		hide: {
-			Metros: false,
-			Buses: false,
-			Trains: false,
-			Trams: false,
-			Ships: false
+		show: {
+			Metros: true,
+			Buses: true,
+			Trains: true,
+			Trams: true,
+			Ships: true,
+			All: true
 		}
 	};
 
@@ -83,14 +86,20 @@ class SearchResults extends Component {
 	};
 
 	onShowAllTransportGroupsButtonClickHandler = () => {
-		let hidden = Object.keys(this.state.hide).map(k => (k = false));
-		this.setState({ hide: hidden });
+		let shown = {};
+		Object.keys(this.state.show).map(k => (shown[k] = true));
+		this.setState({ show: shown });
+		console.log(this.state.show);
 	};
 
-	onHideTransportGroupsButtonClickHandler = transportType => {
-		let hidden = { ...this.state.hide };
-		hidden[transportType] = !hidden[transportType];
-		this.setState({ hide: hidden });
+	onShowTransportGroupsButtonClickHandler = transportType => {
+		let shown = { ...this.state.show };
+		if (Object.values(this.state.show).every(v => v)) {
+			Object.keys(this.state.show).map(k => (shown[k] = false));
+		}
+
+		shown[transportType] = !shown[transportType];
+		this.setState({ show: shown });
 	};
 
 	onUpdateButtonClickHandler = () => {
@@ -107,7 +116,7 @@ class SearchResults extends Component {
 			departureGroups = <WarningMessage>There are no registered departures from this address.</WarningMessage>;
 		} else {
 			departureGroups = Object.keys(this.state.results).map(transportGroup => {
-				return !this.state.hide[transportGroup] ? (
+				return this.state.show[transportGroup] ? (
 					<DepartureGroup
 						key={transportGroup}
 						transportType={transportGroup}
@@ -125,12 +134,12 @@ class SearchResults extends Component {
 					<div>
 						<SearchResultToolbar
 							searchResults={this.state.results}
-							hidden={this.state.hide}
+							shown={this.state.show}
 							stationName={this.props.match.params.stationName.replace(/_/g, ' / ')}
 							onUpdateButtonClick={this.onUpdateButtonClickHandler}
 							onClearResultsButtonClick={this.onClearResultsButtonClickHandler}
 							onShowAllTransportGroupsButtonClick={this.onShowAllTransportGroupsButtonClickHandler}
-							onHideTransportGroupsButtonClick={this.onHideTransportGroupsButtonClickHandler}
+							onShowTransportGroupsButtonClick={this.onShowTransportGroupsButtonClickHandler}
 							updated={this.state.latestUpdate}
 						/>
 						{departureGroups}
