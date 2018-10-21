@@ -61,7 +61,7 @@ class SearchBar extends Component {
 	};
 
 	fetchFromApi = query => {
-		this.setState({ loading: true });
+		this.setState({ isLoading: true });
 		fetch('api/typeahead/' + query, {
 			headers: {
 				Accept: 'application/json',
@@ -126,7 +126,7 @@ class SearchBar extends Component {
 				<InputGroup>
 					<AsyncTypeahead
 						isInvalid={this.state.isNoMatch}
-						isLoading={this.state.isLoading}
+						isLoading={false}
 						selectHintOnEnter
 						highlightOnlyResult
 						bsSize="large"
@@ -153,7 +153,11 @@ class SearchBar extends Component {
 							style={this.state.isNoMatch ? { backgroundColor: '#dc3545', borderColor: 'red', color: 'white' } : null}
 							onClick={this.onClearSearchButtonClickHandler}
 						>
-							{this.state.isLoading ? <i class="fa fa-circle-o-notch fa-spin" /> : <i className="fa fa-close" />}
+							{this.state.isLoading ? (
+								<i class="fa fa-circle-o-notch fa-spin fa-fw" />
+							) : (
+								<i className="fa fa-close fa-fw" />
+							)}
 						</Button>
 					</InputGroup.Button>
 				</InputGroup>
