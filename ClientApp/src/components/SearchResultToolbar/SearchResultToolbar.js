@@ -16,9 +16,9 @@ const searchResultToolbar = props => (
 			<h3 className="p-2">{props.stationName}</h3>
 		</div>
 		{Object.keys(props.searchResults).length > 1 ? (
-			<div className="bg-dark rounded mb-3 h5 d-flex justify-content-center py-2 text-light">
-				<ul className="nav nav-pills nav-filter">
-					<li className="nav-item" key="all">
+			<div className="bg-dark rounded mb-3 h5 d-flex justify-content-center text-light pb-2">
+				<ul className="nav nav-pills nav-filter justify-content-center">
+					<li className="nav-item ml-2 mt-2" key="all">
 						<a
 							className={
 								Object.keys(props.hidden).every(k => !props.hidden[k]) ? 'nav-link filter active' : 'nav-link filter'
@@ -30,7 +30,7 @@ const searchResultToolbar = props => (
 					</li>
 					{Object.keys(props.searchResults).map(transportType => {
 						return (
-							<li className="nav-item ml-2" key={transportType}>
+							<li className="nav-item ml-2 mt-2" key={transportType}>
 								<a
 									className={!props.hidden[transportType] ? 'nav-link filter active' : 'nav-link filter'}
 									onClick={() => {
