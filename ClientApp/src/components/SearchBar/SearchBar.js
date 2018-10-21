@@ -8,6 +8,7 @@ class SearchBar extends Component {
 		searchResults: [],
 		searchHistoryStorage: [],
 		searchMinLength: 3,
+		searchEmptyLabel: 'No stations were found.',
 		isNoMatch: false,
 		isLoading: false,
 		isError: false,
@@ -61,7 +62,7 @@ class SearchBar extends Component {
 
 	fetchFromApi = query => {
 		this.setState({ loading: true });
-		fetch('api/typeahead/' + query, {
+		fetch('api/typeaheadd/' + query, {
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json'
@@ -89,7 +90,12 @@ class SearchBar extends Component {
 				});
 			})
 			.catch(err => {
-				this.setState({ isLoading: false, isError: true });
+				this.setState({
+					isLoading: false,
+					isError: true,
+					searchEmptyLabel: 'An Error has occurred while fetching data from SL. Please try again.',
+					isNoMatch: true
+				});
 			});
 	};
 
@@ -126,7 +132,7 @@ class SearchBar extends Component {
 						bsSize="large"
 						minLength={this.state.searchMinLength}
 						placeholder="From station..."
-						emptyLabel="No stations were found."
+						emptyLabel={this.state.searchEmptyLabel}
 						filterBy={option => option.Name}
 						labelKey="Name"
 						useCache={false}
