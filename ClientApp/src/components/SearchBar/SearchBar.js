@@ -8,6 +8,7 @@ class SearchBar extends Component {
 		searchResults: [],
 		searchHistoryStorage: [],
 		searchMinLength: 3,
+		isNoMatch: false,
 		isLoading: false,
 		isError: false,
 		touched: false
@@ -58,14 +59,6 @@ class SearchBar extends Component {
 		this.typeahead.getInstance().blur();
 	};
 
-	checkValidity = () => {
-		return (
-			this.state.touched &&
-			this.state.searchResults.length === 0 &&
-			this.typeahead.state.query.length > this.state.searchMinLength
-		);
-	};
-
 	fetchFromApi = query => {
 		this.setState({ loading: true });
 		fetch('api/typeahead/' + query, {
@@ -87,9 +80,12 @@ class SearchBar extends Component {
 							.trim()
 							.includes(query.toLowerCase().trim()) || val.SiteId.trim().includes(query.trim())
 				);
+				let isEmpty = filteredResponse.length === 0;
+
 				this.setState({
 					isLoading: false,
-					searchResults: filteredResponse
+					searchResults: filteredResponse,
+					isNoMatch: isEmpty
 				});
 			})
 			.catch(err => {
@@ -103,6 +99,13 @@ class SearchBar extends Component {
 		this.setState({ searchResults: searchHistory, searchMinLength: minLength });
 	};
 
+	onInputChangeHandler = e => {
+		if (e.length < 3) {
+			this.fetchFromSessionStorage();
+			this.setState({ isNoMatch: false });
+		}
+	};
+
 	onFocusHandler = () => {
 		if (this.state.touched || !this.typeahead.state.query.length === 0) {
 			return;
@@ -112,26 +115,27 @@ class SearchBar extends Component {
 	};
 
 	render() {
-		let isSearchInvalid = this.checkValidity();
-		console.log(isSearchInvalid);
-
 		return (
 			<FormGroup className="input-group mt-1" validationState="error">
 				<InputGroup>
 					<AsyncTypeahead
-						isInvalid={isSearchInvalid}
+						isInvalid={this.state.isNoMatch}
 						isLoading={this.state.isLoading}
 						selectHintOnEnter
 						highlightOnlyResult
 						bsSize="large"
 						minLength={this.state.searchMinLength}
-						placeholder="From station/stop/address"
+						placeholder="From station..."
+						emptyLabel="No stations were found."
 						filterBy={option => option.Name}
 						labelKey="Name"
 						useCache={false}
 						options={this.state.searchResults}
 						onFocus={this.onFocusHandler}
 						onChange={selected => this.searchSelectedStation(selected)}
+						onInputChange={e => {
+							this.onInputChangeHandler(e);
+						}}
 						onSearch={query => {
 							query.trim().length > 2 ? this.fetchFromApi(query) : this.fetchFromSessionStorage();
 						}}
@@ -140,7 +144,7 @@ class SearchBar extends Component {
 					<InputGroup.Button className="input-group-append">
 						<Button
 							className="btn btn-light btn-lg rounded-right"
-							style={isSearchInvalid ? { backgroundColor: '#dc3545', borderColor: 'red', color: 'white' } : null}
+							style={this.state.isNoMatch ? { backgroundColor: '#dc3545', borderColor: 'red', color: 'white' } : null}
 							onClick={this.onClearSearchButtonClickHandler}
 						>
 							{this.props.isLoading ? <i class="fa fa-circle-o-notch fa-spin" /> : <i className="fa fa-close" />}
