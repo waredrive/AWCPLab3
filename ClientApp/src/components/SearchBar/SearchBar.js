@@ -119,7 +119,7 @@ class SearchBar extends Component {
 						highlightOnlyResult
 						bsSize="large"
 						minLength={this.state.searchMinLength}
-						placeholder="Station..."
+						placeholder="From station/stop/address"
 						filterBy={option => option.Name}
 						labelKey="Name"
 						useCache={false}
