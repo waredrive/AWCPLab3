@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import { withRouter } from 'react-router-dom';
+import { FormGroup, InputGroup, Button } from 'react-bootstrap';
 
 class SearchBar extends Component {
 	state = {
@@ -42,7 +43,7 @@ class SearchBar extends Component {
 		}
 	};
 
-	clearSearch = () => {
+	onClearSearchButtonClickHandler = () => {
 		this.typeahead.getInstance().clear();
 		this.setState({ touched: false });
 	};
@@ -53,7 +54,7 @@ class SearchBar extends Component {
 		}
 		this.addToSearchHistory(station[0]);
 		this.props.history.push(`/${encodeURIComponent(station[0].Name.replace(/\//g, '_'))}/${station[0].SiteId}`);
-		this.clearSearch();
+		this.onClearSearchButtonClickHandler();
 		this.typeahead.getInstance().blur();
 	};
 
@@ -98,37 +99,45 @@ class SearchBar extends Component {
 		if (this.state.touched || !this.typeahead.state.query.length === 0) {
 			return;
 		}
+		console.log(this.typeahead);
 		this.setState({ touched: true });
 		this.fetchFromSessionStorage();
 	};
 
 	render() {
 		return (
-			<div className="input-group mt-1">
-				<AsyncTypeahead
-					isLoading={this.state.isLoading}
-					selectHintOnEnter
-					highlightOnlyResult
-					bsSize="large"
-					minLength={this.state.searchMinLength}
-					placeholder="Station..."
-					filterBy={option => option.Name}
-					labelKey="Name"
-					useCache={false}
-					options={this.state.searchResults}
-					onFocus={this.onFocusHandler}
-					onChange={selected => this.searchSelectedStation(selected)}
-					onSearch={query => {
-						query.trim().length > 2 ? this.fetchFromApi(query) : this.fetchFromSessionStorage();
-					}}
-					ref={ref => (this.typeahead = ref)}
-				/>
-				<div className="input-group-append">
-					<button className="btn btn-light btn-lg rounded-right" onClick={this.clearSearch}>
-						{this.props.isLoading ? <i class="fa fa-circle-o-notch fa-spin" /> : <i className="fa fa-close" />}
-					</button>
-				</div>
-			</div>
+			<FormGroup className="input-group mt-1" validationState="error">
+				<InputGroup>
+					<AsyncTypeahead
+						isInvalid={
+							this.state.touched &&
+							this.state.searchResults.length === 0 &&
+							this.typeahead.state.query.length > this.state.searchMinLength
+						}
+						isLoading={this.state.isLoading}
+						selectHintOnEnter
+						highlightOnlyResult
+						bsSize="large"
+						minLength={this.state.searchMinLength}
+						placeholder="Station..."
+						filterBy={option => option.Name}
+						labelKey="Name"
+						useCache={false}
+						options={this.state.searchResults}
+						onFocus={this.onFocusHandler}
+						onChange={selected => this.searchSelectedStation(selected)}
+						onSearch={query => {
+							query.trim().length > 2 ? this.fetchFromApi(query) : this.fetchFromSessionStorage();
+						}}
+						ref={ref => (this.typeahead = ref)}
+					/>
+					<InputGroup.Button className="input-group-append">
+						<Button className="btn btn-light btn-lg rounded-right" onClick={this.onClearSearchButtonClickHandler}>
+							{this.props.isLoading ? <i class="fa fa-circle-o-notch fa-spin" /> : <i className="fa fa-close" />}
+						</Button>
+					</InputGroup.Button>
+				</InputGroup>
+			</FormGroup>
 		);
 	}
 }

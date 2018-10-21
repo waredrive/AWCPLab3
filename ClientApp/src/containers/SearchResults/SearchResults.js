@@ -32,6 +32,13 @@ class SearchResults extends Component {
 		this.onShowAllTransportGroupsButtonClickHandler();
 	}
 
+	formatTime = i => {
+		if (i < 10) {
+			i = '0' + i;
+		}
+		return i;
+	};
+
 	fetchFromApi = stationId => {
 		const possibleTransportTypes = ['Metros', 'Buses', 'Trains', 'Trams', 'Ships'];
 
@@ -62,7 +69,7 @@ class SearchResults extends Component {
 					return obj;
 				}, {});
 				const latestUpdate = new Date(response.ResponseData.LatestUpdate);
-				const updated = `${latestUpdate.getHours()}:${latestUpdate.getMinutes()}`;
+				const updated = `${this.formatTime(latestUpdate.getHours())}:${this.formatTime(latestUpdate.getMinutes())}`;
 				this.setState({
 					results: results,
 					isLoading: false,
