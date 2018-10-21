@@ -58,6 +58,14 @@ class SearchBar extends Component {
 		this.typeahead.getInstance().blur();
 	};
 
+	checkValidity = () => {
+		return (
+			this.state.touched &&
+			this.state.searchResults.length === 0 &&
+			this.typeahead.state.query.length > this.state.searchMinLength
+		);
+	};
+
 	fetchFromApi = query => {
 		this.setState({ loading: true });
 		fetch('api/typeahead/' + query, {
@@ -99,21 +107,19 @@ class SearchBar extends Component {
 		if (this.state.touched || !this.typeahead.state.query.length === 0) {
 			return;
 		}
-		console.log(this.typeahead);
 		this.setState({ touched: true });
 		this.fetchFromSessionStorage();
 	};
 
 	render() {
+		let isSearchInvalid = this.checkValidity();
+		console.log(isSearchInvalid);
+
 		return (
 			<FormGroup className="input-group mt-1" validationState="error">
 				<InputGroup>
 					<AsyncTypeahead
-						isInvalid={
-							this.state.touched &&
-							this.state.searchResults.length === 0 &&
-							this.typeahead.state.query.length > this.state.searchMinLength
-						}
+						isInvalid={isSearchInvalid}
 						isLoading={this.state.isLoading}
 						selectHintOnEnter
 						highlightOnlyResult
@@ -132,7 +138,11 @@ class SearchBar extends Component {
 						ref={ref => (this.typeahead = ref)}
 					/>
 					<InputGroup.Button className="input-group-append">
-						<Button className="btn btn-light btn-lg rounded-right" onClick={this.onClearSearchButtonClickHandler}>
+						<Button
+							className="btn btn-light btn-lg rounded-right"
+							style={isSearchInvalid ? { backgroundColor: '#dc3545', borderColor: 'red', color: 'white' } : null}
+							onClick={this.onClearSearchButtonClickHandler}
+						>
 							{this.props.isLoading ? <i class="fa fa-circle-o-notch fa-spin" /> : <i className="fa fa-close" />}
 						</Button>
 					</InputGroup.Button>
