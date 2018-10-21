@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, BrowserRouter, Switch } from 'react-router-dom';
+import { Route, HashRouter, Switch } from 'react-router-dom';
 
 import ErrorMessage from '../components/ErrorMessage/ErrorMessage';
 import SearchBar from '../components/SearchBar/SearchBar';
@@ -11,7 +11,7 @@ const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
 export default class App extends Component {
 	render() {
 		return (
-			<BrowserRouter basename={baseUrl}>
+			<HashRouter basename={baseUrl}>
 				<main className="container">
 					<div className="row">
 						<div className="col-md-12 my-5" style={{ minWidth: '480px' }}>
@@ -24,18 +24,16 @@ export default class App extends Component {
 								<Route path="/:stationName/:stationId" component={SearchResults} />
 								<Route
 									path="/error"
-									component={() => {
-										return (
-											<ErrorMessage>An Error has occurred while fetching data from SL. Please try again.</ErrorMessage>
-										);
-									}}
+									component={() => (
+										<ErrorMessage>An Error has occurred while fetching data from SL. Please try again.</ErrorMessage>
+									)}
 								/>
 								<Route component={WelcomePage} />
 							</Switch>
 						</div>
 					</div>
 				</main>
-			</BrowserRouter>
+			</HashRouter>
 		);
 	}
 }
