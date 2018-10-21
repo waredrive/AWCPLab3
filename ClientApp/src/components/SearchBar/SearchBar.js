@@ -154,7 +154,7 @@ class SearchBar extends Component {
 							onClick={this.onClearSearchButtonClickHandler}
 						>
 							{this.state.isLoading ? (
-								<i class="fa fa-circle-o-notch fa-spin fa-fw" />
+								<i className="fa fa-circle-o-notch fa-spin fa-fw" />
 							) : (
 								<i className="fa fa-close fa-fw" />
 							)}
