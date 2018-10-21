@@ -46,7 +46,7 @@ class SearchBar extends Component {
 
 	onClearSearchButtonClickHandler = () => {
 		this.typeahead.getInstance().clear();
-		this.setState({ touched: false });
+		this.setState({ touched: false, isNoMatch: false });
 	};
 
 	searchSelectedStation = station => {
@@ -147,7 +147,7 @@ class SearchBar extends Component {
 							style={this.state.isNoMatch ? { backgroundColor: '#dc3545', borderColor: 'red', color: 'white' } : null}
 							onClick={this.onClearSearchButtonClickHandler}
 						>
-							{this.props.isLoading ? <i class="fa fa-circle-o-notch fa-spin" /> : <i className="fa fa-close" />}
+							{this.state.isLoading ? <i class="fa fa-circle-o-notch fa-spin" /> : <i className="fa fa-close" />}
 						</Button>
 					</InputGroup.Button>
 				</InputGroup>
