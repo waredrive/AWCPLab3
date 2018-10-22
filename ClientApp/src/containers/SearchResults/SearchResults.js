@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import 'abortcontroller-polyfill';
+import 'abortcontroller-polyfill/dist/polyfill-patch-fetch';
 
 import Spinner from '../../components/Spinner/Spinner';
 import DepartureGroup from './DepartureGroup/DepartureGroup';
 import SearchResultToolbar from '../../components/SearchResultToolbar/SearchResultToolbar';
 import WarningMessage from '../../components/WarningMessage/WarningMessage';
 
-//TODO: cancel fetch on unmount
+const AbortController = window.AbortController;
 
 class SearchResults extends Component {
-	// controller = new AbortController();
+	controller;
 
 	state = {
 		isLoading: false,
@@ -45,11 +45,20 @@ class SearchResults extends Component {
 	};
 
 	fetchFromApi = stationId => {
+		let signal;
 		const possibleTransportTypes = ['Metros', 'Buses', 'Trains', 'Trams', 'Ships'];
+
+		if (this.controller !== undefined) {
+			this.controller.abort();
+		}
+
+		this.controller = new AbortController();
+		signal = this.controller.signal;
 
 		this.setState({ isLoading: true });
 
 		fetch('api/search/' + stationId, {
+			signal,
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json'
@@ -86,7 +95,10 @@ class SearchResults extends Component {
 				});
 			})
 			.catch(err => {
-				console.log(err);
+				if (err.name === 'AbortError') {
+					this.setState({ isLoading: false, isError: false });
+					return;
+				}
 				this.setState({ isLoading: false, isError: true });
 				this.props.history.push('/error');
 			});
