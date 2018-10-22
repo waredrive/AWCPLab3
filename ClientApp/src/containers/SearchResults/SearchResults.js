@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import 'abortcontroller-polyfill';
 
 import Spinner from '../../components/Spinner/Spinner';
 import DepartureGroup from './DepartureGroup/DepartureGroup';
@@ -8,6 +9,8 @@ import WarningMessage from '../../components/WarningMessage/WarningMessage';
 //TODO: cancel fetch on unmount
 
 class SearchResults extends Component {
+	// controller = new AbortController();
+
 	state = {
 		isLoading: false,
 		isError: false,
@@ -25,7 +28,7 @@ class SearchResults extends Component {
 			return;
 		}
 		this.fetchFromApi(this.props.match.params.stationId);
-		this.onShowAllTransportGroupsButtonClickHandler();
+		this.showAllTransportGroups();
 	}
 
 	formatTime = i => {
@@ -89,30 +92,30 @@ class SearchResults extends Component {
 			});
 	};
 
-	onShowAllTransportGroupsButtonClickHandler = () => {
+	showAllTransportGroups = () => {
 		let shown = {};
 		Object.keys(this.state.show).map(k => (shown[k] = true));
 		this.setState({ show: shown });
 	};
 
-	onShowTransportGroupsButtonClickHandler = transportType => {
+	showTransportGroups = transportType => {
 		let shown = { ...this.state.show };
 		if (Object.values(this.state.show).every(v => v)) {
 			Object.keys(this.state.show).map(k => (shown[k] = false));
 		}
 		shown[transportType] = !shown[transportType];
 		if (Object.values(shown).every(v => !v)) {
-			this.onShowAllTransportGroupsButtonClickHandler();
+			this.showAllTransportGroups();
 			return;
 		}
 		this.setState({ show: shown });
 	};
 
-	onUpdateButtonClickHandler = () => {
+	updateResults = () => {
 		this.fetchFromApi(this.props.match.params.stationId);
 	};
 
-	onClearResultsButtonClickHandler = () => {
+	clearResults = () => {
 		this.props.history.push('/');
 	};
 
@@ -142,10 +145,10 @@ class SearchResults extends Component {
 							searchResults={this.state.results}
 							shown={this.state.show}
 							stationName={this.props.match.params.stationName.replace(/_/g, ' / ')}
-							onUpdateButtonClick={this.onUpdateButtonClickHandler}
-							onClearResultsButtonClick={this.onClearResultsButtonClickHandler}
-							onShowAllTransportGroupsButtonClick={this.onShowAllTransportGroupsButtonClickHandler}
-							onShowTransportGroupsButtonClick={this.onShowTransportGroupsButtonClickHandler}
+							onUpdateButtonClick={this.updateResults}
+							onClearResultsButtonClick={this.clearResults}
+							onShowAllTransportGroupsButtonClick={this.showAllTransportGroups}
+							onShowTransportGroupsButtonClick={this.showTransportGroups}
 							updated={this.state.latestUpdate}
 						/>
 						{departureGroups}

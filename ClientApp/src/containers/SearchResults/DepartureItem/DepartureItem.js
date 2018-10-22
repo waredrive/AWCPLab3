@@ -80,7 +80,7 @@ class DepartureItem extends Component {
 			});
 	};
 
-	onDepartureClickHandler = () => {
+	showDetails = () => {
 		let isError = this.state.isError;
 		if (this.state.showDetails && isError) {
 			isError = false;
@@ -117,7 +117,7 @@ class DepartureItem extends Component {
 								className="btn btn-light btn-block d-flex justify-content-between align-items-center"
 								onClick={e => {
 									e.preventDefault();
-									this.onDepartureClickHandler();
+									this.showDetails();
 								}}
 							>
 								<span className="d-flex justify-content-start align-items-center text-left">

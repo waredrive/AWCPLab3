@@ -3,6 +3,7 @@ import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import { withRouter } from 'react-router-dom';
 import { FormGroup, InputGroup, Button } from 'react-bootstrap';
 
+//For overriding the default bootstrap isInvalid class. Makes input background red.
 // import './SearchBar.css';
 
 class SearchBar extends Component {
@@ -47,7 +48,7 @@ class SearchBar extends Component {
 		}
 	};
 
-	onClearSearchButtonClickHandler = () => {
+	clearSearch = () => {
 		this.typeahead.getInstance().clear();
 		this.typeahead.getInstance().focus();
 		this.setState({ touched: false, isNoMatch: false });
@@ -59,7 +60,7 @@ class SearchBar extends Component {
 		}
 		this.addToSearchHistory(station[0]);
 		this.props.history.push(`/${encodeURIComponent(station[0].Name.replace(/\//g, '_'))}/${station[0].SiteId}`);
-		this.onClearSearchButtonClickHandler();
+		this.clearSearch();
 		this.typeahead.getInstance().blur();
 	};
 
@@ -154,7 +155,7 @@ class SearchBar extends Component {
 						<Button
 							className="btn btn-light btn-lg rounded-right"
 							style={this.state.isNoMatch ? { backgroundColor: '#dc3545', borderColor: 'red', color: 'white' } : null}
-							onClick={this.onClearSearchButtonClickHandler}
+							onClick={this.clearSearch}
 						>
 							{this.state.isLoading ? (
 								<i className="fa fa-circle-o-notch fa-spin fa-fw" />
