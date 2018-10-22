@@ -3,6 +3,8 @@ import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import { withRouter } from 'react-router-dom';
 import { FormGroup, InputGroup, Button } from 'react-bootstrap';
 
+// import './SearchBar.css';
+
 class SearchBar extends Component {
 	state = {
 		searchResults: [],
