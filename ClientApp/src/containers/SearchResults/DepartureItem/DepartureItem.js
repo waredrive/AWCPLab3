@@ -14,13 +14,6 @@ class DepartureItem extends Component {
 		showDetails: false
 	};
 
-	formatTime = i => {
-		if (i < 10) {
-			i = '0' + i;
-		}
-		return i;
-	};
-
 	fetchFromApi = (originId, departure) => {
 		const transportTypesIds = {
 			METRO: '2',
@@ -40,6 +33,7 @@ class DepartureItem extends Component {
 			`${this.formatTime(date.getHours())}_${this.formatTime(date.getMinutes())}`;
 
 		this.setState({ isLoading: true });
+
 		fetch('api/stops/' + params, {
 			headers: {
 				Accept: 'application/json',
@@ -77,6 +71,13 @@ class DepartureItem extends Component {
 					isError: true
 				});
 			});
+	};
+
+	formatTime = i => {
+		if (i < 10) {
+			i = '0' + i;
+		}
+		return i;
 	};
 
 	showDetails = () => {

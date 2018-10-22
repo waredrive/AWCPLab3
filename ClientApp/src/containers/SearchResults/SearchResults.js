@@ -30,19 +30,6 @@ class SearchResults extends Component {
 		this.showAllTransportGroups();
 	}
 
-	formatTime = i => {
-		if (i < 10) {
-			i = '0' + i;
-		}
-		return i;
-	};
-
-	getTransportTypesToShow = results => {
-		let transportTypes = {};
-		Object.keys(results).map(k => (transportTypes[k] = true));
-		return transportTypes;
-	};
-
 	fetchFromApi = stationId => {
 		let signal;
 		const possibleTransportTypes = ['Metros', 'Buses', 'Trains', 'Trams', 'Ships'];
@@ -101,6 +88,19 @@ class SearchResults extends Component {
 				this.setState({ isLoading: false, isError: true });
 				this.props.history.push('/error');
 			});
+	};
+
+	formatTime = i => {
+		if (i < 10) {
+			i = '0' + i;
+		}
+		return i;
+	};
+
+	getTransportTypesToShow = results => {
+		let transportTypes = {};
+		Object.keys(results).map(k => (transportTypes[k] = true));
+		return transportTypes;
 	};
 
 	showAllTransportGroups = () => {

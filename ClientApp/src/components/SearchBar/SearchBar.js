@@ -23,47 +23,6 @@ class SearchBar extends Component {
 		this.setState({ searchHistoryStorage: history });
 	}
 
-	getSearchHistory() {
-		let storage = [];
-		if (sessionStorage) {
-			if (sessionStorage.getItem('searchHistory')) {
-				storage = JSON.parse(sessionStorage.getItem('searchHistory'));
-			}
-		}
-		return storage;
-	}
-
-	addToSearchHistory = station => {
-		let storage = [...this.state.searchHistoryStorage];
-
-		if (sessionStorage) {
-			if (!storage.some(s => s.Name === station.Name)) {
-				storage.unshift(station);
-			}
-			if (storage.length > 5) {
-				storage.pop();
-			}
-			this.setState({ searchHistoryStorage: storage });
-			sessionStorage.setItem('searchHistory', JSON.stringify(storage));
-		}
-	};
-
-	clearSearch = () => {
-		this.typeahead.getInstance().clear();
-		this.typeahead.getInstance().focus();
-		this.setState({ touched: false, isNoMatch: false });
-	};
-
-	searchSelectedStation = station => {
-		if (station.length !== 1) {
-			return;
-		}
-		this.addToSearchHistory(station[0]);
-		this.props.history.push(`/${encodeURIComponent(station[0].Name.replace(/\//g, '_'))}/${station[0].SiteId}`);
-		this.clearSearch();
-		this.typeahead.getInstance().blur();
-	};
-
 	fetchFromApi = query => {
 		this.setState({ isLoading: true });
 		fetch('api/typeahead/' + query, {
@@ -107,6 +66,47 @@ class SearchBar extends Component {
 		const searchHistory = [...this.state.searchHistoryStorage];
 		const minLength = this.state.searchHistoryStorage.length > 0 ? 0 : 3;
 		this.setState({ searchResults: searchHistory, searchMinLength: minLength });
+	};
+
+	getSearchHistory() {
+		let storage = [];
+		if (sessionStorage) {
+			if (sessionStorage.getItem('searchHistory')) {
+				storage = JSON.parse(sessionStorage.getItem('searchHistory'));
+			}
+		}
+		return storage;
+	}
+
+	addToSearchHistory = station => {
+		let storage = [...this.state.searchHistoryStorage];
+
+		if (sessionStorage) {
+			if (!storage.some(s => s.Name === station.Name)) {
+				storage.unshift(station);
+			}
+			if (storage.length > 5) {
+				storage.pop();
+			}
+			this.setState({ searchHistoryStorage: storage });
+			sessionStorage.setItem('searchHistory', JSON.stringify(storage));
+		}
+	};
+
+	clearSearch = () => {
+		this.typeahead.getInstance().clear();
+		this.typeahead.getInstance().focus();
+		this.setState({ touched: false, isNoMatch: false });
+	};
+
+	searchSelectedStation = station => {
+		if (station.length !== 1) {
+			return;
+		}
+		this.addToSearchHistory(station[0]);
+		this.props.history.push(`/${encodeURIComponent(station[0].Name.replace(/\//g, '_'))}/${station[0].SiteId}`);
+		this.clearSearch();
+		this.typeahead.getInstance().blur();
 	};
 
 	onInputChangeHandler = e => {
