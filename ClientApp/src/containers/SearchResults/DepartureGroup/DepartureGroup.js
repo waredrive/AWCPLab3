@@ -1,5 +1,4 @@
 import React from 'react';
-
 import DepartureItem from '../DepartureItem/DepartureItem';
 
 const departureGroup = props => {

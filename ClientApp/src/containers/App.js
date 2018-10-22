@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Route, HashRouter, Switch } from 'react-router-dom';
-
 import ErrorMessage from '../components/ErrorMessage/ErrorMessage';
 import SearchBar from '../components/SearchBar/SearchBar';
 import WelcomePage from '../components/WelcomePage/WelcomePage';

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-
 import DepartureDetails from '../DepartureDetails/DepartureDetails';
 import Spinner from '../../../components/Spinner/Spinner';
 import ErrorMessage from '../../../components/ErrorMessage/ErrorMessage';

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import 'abortcontroller-polyfill/dist/polyfill-patch-fetch';
-
 import Spinner from '../../components/Spinner/Spinner';
 import DepartureGroup from './DepartureGroup/DepartureGroup';
 import SearchResultToolbar from '../../components/SearchResultToolbar/SearchResultToolbar';
