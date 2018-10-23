@@ -129,8 +129,7 @@ class DepartureItem extends Component {
 									/>
 									<h5>
 										<span className="badge badge-info badge-pill mr-2 mr-md-5" style={{ width: '90px' }}>
-											Line:
-											{this.props.departure.LineNumber}
+											{`Line: ${this.props.departure.LineNumber}`}
 										</span>
 									</h5>
 									<span className="h5 text-dark">
