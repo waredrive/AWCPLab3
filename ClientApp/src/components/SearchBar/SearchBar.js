@@ -3,8 +3,7 @@ import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import { withRouter } from 'react-router-dom';
 import { FormGroup, InputGroup, Button } from 'react-bootstrap';
 
-//For overriding the default bootstrap isInvalid class. Makes input background red.
-// import './SearchBar.css';
+import './SearchBar.css';
 
 class SearchBar extends Component {
 	state = {
