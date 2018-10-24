@@ -155,7 +155,7 @@ class SearchResults extends Component {
 						<SearchResultToolbar
 							searchResults={this.state.results}
 							shown={this.state.show}
-							stationName={this.props.match.params.stationName.replace(/_/g, ' / ')}
+							stationName={decodeURIComponent(this.props.match.params.stationName.replace(/_/g, ' / '))}
 							onUpdateButtonClick={this.updateResults}
 							onClearResultsButtonClick={this.clearResults}
 							onShowAllTransportGroupsButtonClick={this.showAllTransportGroups}
